@@ -1,65 +1,56 @@
-import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
+"use client";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import { Button, buttonVariants } from "./ui/button";
+import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import { navList } from "@/app/constants";
+import { useState } from "react";
 
 const Navbar = () => {
-  const navList = [
-    {
-      name: "Home",
-      link: "",
-    },
-    {
-      name: "About",
-      link: "",
-    },
-    {
-      name: "FAQs",
-      link: "",
-    },
-    {
-      name: "Report",
-      link: "",
-    },
-  ];
-  const logoList = [
-    {
-      logo: Facebook,
-      link: "",
-      size: "15",
-    },
-    {
-      logo: Instagram,
-      link: "",
-      size: "15",
-    },
-    {
-      logo: Twitter,
-      link: "",
-      size: "15",
-    },
-    {
-      logo: Linkedin,
-      link: "",
-      size: "15",
-    },
-  ];
+  const [menu, setMenu] = useState<boolean>(false);
   return (
-    <header className="sticky top-0">
-      <nav className="flex justify-around items-center py-10 shadow-2xl ">
-        <div className="logo">logo</div>
-        <ul className="flex gap-4 items-center">
-          {navList.map((item) => (
-            <Link href={item.link} key={item.link}>
-              {item.name}
-            </Link>
-          ))}
-          {logoList.map((item) => (
-            <Link href={item.link} key={item.link}>
-              <item.logo size={item.size} />
-            </Link>
-          ))}
-        </ul>
-      </nav>
-    </header>
+    <div className="bg-white sticky z-50 top-0 inset-x-0 h-16">
+      <header className=" bg-white">
+        <MaxWidthWrapper>
+          <div className="border-b border-gray-200">
+            <div className="flex h-16 items-center justify-between">
+              <h1 className="text-3xl font-bold text-primary">MedRepo</h1>
+              <div className=" hidden md:flex gap-4 items-center ">
+                {navList.map((item) => (
+                  <Link href={item.link} key={item.link}>
+                    <p className="text-md">{item.name}</p>
+                  </Link>
+                ))}
+                <div className="ml-auto flex items-center">
+                  <div className="hidden md:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6 ml-5">
+                    <Button variant={"default"}>
+                      <Link href="/sign-in">Sign in</Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <div className="md:hidden">
+                {menu ? (
+                  <X onClick={() => setMenu(!menu)} />
+                ) : (
+                  <Menu onClick={() => setMenu(!menu)} />
+                )}
+              </div>
+            </div>
+            {menu && (
+              <div className="md:hidden flex flex-col gap-4 mb-4 mt-8 transition duration-300 ease-in-out ">
+                {navList.map((item) => (
+                  <p key={item.link}>{item.name}</p>
+                ))}
+                <Button variant={"default"} className="mx-auto">
+                  <Link href="/sign-in">Sign in</Link>
+                </Button>
+              </div>
+            )}
+          </div>
+        </MaxWidthWrapper>
+      </header>
+    </div>
   );
 };
 
