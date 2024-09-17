@@ -1,23 +1,31 @@
 "use client";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
-import { Button, buttonVariants } from "./ui/button";
+import { Button } from "./ui/button";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { navList } from "@/app/constants";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const [menu, setMenu] = useState<boolean>(false);
+  const pathname = usePathname();
   return (
-    <div className="bg-white sticky z-50 top-0 inset-x-0 h-16">
+    <div className="bg-white sticky z-50 top-0 inset-x-0 ">
       <header className=" bg-white">
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">
             <div className="flex h-16 items-center justify-between">
               <h1 className="text-3xl font-bold text-primary">MedRepo</h1>
               <div className=" hidden md:flex gap-4 items-center ">
-                {navList.map((item) => (
-                  <Link href={item.link} key={item.link}>
+                {navList.map((item, index) => (
+                  <Link
+                    href={item.link}
+                    key={item.link}
+                    className={`hover:text-primary  transition-all ${
+                      item.link === pathname && "text-primary border-primary"
+                    }`}
+                  >
                     <p className="text-md">{item.name}</p>
                   </Link>
                 ))}
@@ -37,8 +45,9 @@ const Navbar = () => {
                 )}
               </div>
             </div>
+            {/* Todo: Add transition on opening and closing hamburger. */}
             {menu && (
-              <div className="md:hidden flex flex-col gap-4 mb-4 mt-8 transition duration-300 ease-in-out ">
+              <div className="md:hidden flex flex-col gap-4 mb-4 mt-8  ">
                 {navList.map((item) => (
                   <p key={item.link}>{item.name}</p>
                 ))}
