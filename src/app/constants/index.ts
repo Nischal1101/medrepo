@@ -25,18 +25,18 @@ export const logoList = [
 export const navList = [
   {
     name: "Home",
-    link: "",
+    link: "/",
   },
   {
     name: "About",
-    link: "",
+    link: "/about",
   },
   {
     name: "FAQs",
-    link: "",
+    link: "/faq",
   },
   {
     name: "Report",
-    link: "",
+    link: "/report",
   },
 ];
