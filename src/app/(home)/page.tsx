@@ -1,6 +1,7 @@
 import React from "react";
 import MaxWidthWrapper from "../../components/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
+import Features from "@/components/Features";
 
 const Home = () => {
   return (
@@ -24,6 +25,7 @@ const Home = () => {
           </div>
         </div>
       </MaxWidthWrapper>
+      <Features />
     </>
   );
 };
