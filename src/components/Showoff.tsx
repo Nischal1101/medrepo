@@ -16,7 +16,7 @@ const Showoff = () => {
             />
             <div>
               <h1 className="text-center text-primary">1000</h1>
-              <p className=" font-semibold">Registered doctors</p>
+              <p className=" font-semibold text-center md:text-left">Registered doctors</p>
             </div>
           </div>
           <div className="flex flex-col gap-4 py-8 px-6  justify-center ">
@@ -28,7 +28,7 @@ const Showoff = () => {
             />
             <div>
               <h1 className="text-center text-primary ">100</h1>
-              <p className="font-semibold">Registered hospitals</p>{" "}
+              <p className="font-semibold text-center md:text-left">Registered hospitals</p>{" "}
             </div>
           </div>
         </div>
