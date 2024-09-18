@@ -1,10 +1,10 @@
-import Navbar from "@/components/Navbar";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Josefin_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
-import Footer from "@/components/Footer";
+import ClientLayout from "./clientLayout";
+import { usePathname } from "next/navigation";
 
 const josefin_sans = Josefin_Sans({
   subsets: ["latin"],
@@ -30,9 +30,7 @@ export default function RootLayout({
         )}
       >
         <main className="relative flex flex-col min-h-screen">
-          <Navbar />
-          <div className="flex-grow flex-1">{children}</div>
-          <Footer />
+          <ClientLayout>{children}</ClientLayout>
         </main>
 
         <Toaster position="top-center" richColors />

@@ -16,7 +16,7 @@ const Navbar = () => {
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">
             <div className="flex h-16 items-center justify-between">
-              <h1 className="text-3xl font-bold text-primary">MedRepo</h1>
+              <h1 className="text-3xl font-bold text-primary">MedRepo.</h1>
               <div className=" hidden md:flex gap-4 items-center ">
                 {navList.map((item, index) => (
                   <Link
