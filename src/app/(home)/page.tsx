@@ -2,12 +2,13 @@ import React from "react";
 import MaxWidthWrapper from "../../components/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
 import Features from "@/components/Features";
+import Showoff from "@/components/Showoff";
 
 const Home = () => {
   return (
     <>
       <MaxWidthWrapper>
-        <div className="py-20">
+        <div className="py-28">
           <h1 className="tracking-tight text-4xl md:text-6xl text-center font-semibold">
             Secure, Transparent, Efficient{" "}
             <span className="text-primary">Medical Report Repository </span>
@@ -26,6 +27,7 @@ const Home = () => {
         </div>
       </MaxWidthWrapper>
       <Features />
+      <Showoff/>
     </>
   );
 };
