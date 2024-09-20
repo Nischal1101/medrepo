@@ -27,7 +27,7 @@ const Home = () => {
         </div>
       </MaxWidthWrapper>
       <Features />
-      <Showoff/>
+      <Showoff />
     </>
   );
 };
