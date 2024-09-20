@@ -36,7 +36,7 @@ export const navList = [
     link: "/faq",
   },
   {
-    name: "Report",
-    link: "/report",
+    name: "Reports",
+    link: "/reports",
   },
 ];
