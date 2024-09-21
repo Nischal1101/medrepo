@@ -1,5 +1,5 @@
 import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
-
+const userid=1234
 export const logoList = [
   {
     logo: Facebook,
@@ -26,17 +26,17 @@ export const navList = [
   {
     name: "Home",
     link: "/",
+    role: "user",
   },
+
   {
-    name: "About",
-    link: "/about",
-  },
-  {
-    name: "FAQs",
-    link: "/faq",
+    name: "Upload",
+    link: "/upload-report",
+    role: "hospital",
   },
   {
     name: "Reports",
-    link: "/reports",
+    link: "/reports/userid",
+    role: ["user"],
   },
 ];

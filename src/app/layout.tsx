@@ -4,7 +4,6 @@ import { Josefin_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import ClientLayout from "./clientLayout";
-import { usePathname } from "next/navigation";
 
 const josefin_sans = Josefin_Sans({
   subsets: ["latin"],
