@@ -1,3 +1,4 @@
+"use client";
 import DownloadButton from "@/components/DownloadButton";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import {
@@ -9,8 +10,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useParams } from "next/navigation";
 
-const ReportsPage = ({userId}:{userId:string}) => {
+const ReportsPage = () => {
+  const { userid } = useParams();
   return (
     <MaxWidthWrapper>
       <h1 className="text-2xl md:text-4xl mt-12 md:mt-20 ">User's Reports </h1>
