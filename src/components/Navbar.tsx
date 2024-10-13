@@ -49,7 +49,9 @@ const Navbar = () => {
             {menu && (
               <div className="md:hidden flex flex-col gap-4 mb-4 mt-8  ">
                 {navList.map((item) => (
-                  <p key={item.link}>{item.name}</p>
+                  <p key={item.link}>
+                    <Link href={item.link}>{item.name}</Link>
+                  </p>
                 ))}
                 <Button variant={"default"} className="mx-auto">
                   <Link href="/sign-in">Sign in</Link>
