@@ -4,19 +4,20 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useParams } from "next/navigation";
+// import { useParams } from "next/navigation";
 
 const ReportsPage = () => {
-  const { userid } = useParams();
+  // const { userid } = useParams();
   return (
     <MaxWidthWrapper>
-      <h1 className="text-2xl md:text-4xl mt-12 md:mt-20 ">User's Reports </h1>
+      <h1 className="mt-12 text-2xl md:mt-20 md:text-4xl ">
+        User&apos;s Reports{" "}
+      </h1>
       <Table className="mt-12">
         <TableHeader className="md:text-lg">
           <TableRow>

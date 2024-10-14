@@ -6,4 +6,3 @@ const uploadReportPage = () => {
 };
 
 export default uploadReportPage;
-

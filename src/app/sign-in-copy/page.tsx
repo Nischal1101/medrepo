@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LockKeyhole, Mail } from "lucide-react";

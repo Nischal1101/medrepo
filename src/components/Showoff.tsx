@@ -7,7 +7,7 @@ const Showoff = () => {
     <section className="my-10">
       <MaxWidthWrapper>
         <div className="flex justify-center gap-4">
-          <div className="flex flex-col gap-4 py-8 px-6  justify-center ">
+          <div className="flex flex-col justify-center gap-4 px-6  py-8 ">
             <Image
               src={doctor}
               width={120}
@@ -16,10 +16,12 @@ const Showoff = () => {
             />
             <div>
               <h1 className="text-center text-primary">1000</h1>
-              <p className=" font-semibold text-center md:text-left">Registered doctors</p>
+              <p className=" text-center font-semibold md:text-left">
+                Registered doctors
+              </p>
             </div>
           </div>
-          <div className="flex flex-col gap-4 py-8 px-6  justify-center ">
+          <div className="flex flex-col justify-center gap-4 px-6  py-8 ">
             <Image
               src={hospital}
               width={120}
@@ -28,7 +30,9 @@ const Showoff = () => {
             />
             <div>
               <h1 className="text-center text-primary ">100</h1>
-              <p className="font-semibold text-center md:text-left">Registered hospitals</p>{" "}
+              <p className="text-center font-semibold md:text-left">
+                Registered hospitals
+              </p>{" "}
             </div>
           </div>
         </div>
