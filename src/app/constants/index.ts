@@ -1,5 +1,4 @@
 import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
-const userid=1234
 export const logoList = [
   {
     logo: Facebook,
