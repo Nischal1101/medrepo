@@ -6,7 +6,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import lock from "@/app/assets/lock.jpeg";
 
 const Features = () => {
   return (
@@ -21,7 +20,12 @@ const Features = () => {
         <div className="mt-8 grid grid-cols-1 place-items-center items-center gap-8 md:grid-cols-2 lg:grid-cols-3">
           <Card className="min-h-[350px] max-w-[350px] transition-all hover:shadow-2xl">
             <CardHeader>
-              <Image src={lock} alt="loading lock" width={90} height={30} />
+              <Image
+                src="/assets/lock.jpeg"
+                alt="loading lock"
+                width={90}
+                height={30}
+              />
               <CardTitle className="py-1 text-2xl">
                 Privacy protection{" "}
               </CardTitle>
@@ -34,7 +38,12 @@ const Features = () => {
           </Card>{" "}
           <Card className="min-h-[350px] max-w-[350px] transition-all hover:shadow-2xl">
             <CardHeader>
-              <Image src={lock} alt="loading lock" width={90} height={30} />
+              <Image
+                src="/assets/lock.jpeg"
+                alt="loading lock"
+                width={90}
+                height={30}
+              />
               <CardTitle className="py-1 text-2xl">
                 Privacy protection{" "}
               </CardTitle>
@@ -47,7 +56,12 @@ const Features = () => {
           </Card>{" "}
           <Card className="min-h-[350px] max-w-[350px] transition-all hover:shadow-2xl">
             <CardHeader>
-              <Image src={lock} alt="loading lock" width={90} height={30} />
+              <Image
+                src="/assets/lock.jpeg"
+                alt="loading lock"
+                width={90}
+                height={30}
+              />
               <CardTitle className="py-1 text-2xl">
                 Privacy protection{" "}
               </CardTitle>
@@ -60,7 +74,12 @@ const Features = () => {
           </Card>{" "}
           <Card className="min-h-[350px] max-w-[350px] transition-all hover:shadow-2xl">
             <CardHeader>
-              <Image src={lock} alt="loading lock" width={90} height={30} />
+              <Image
+                src="/assets/lock.jpeg"
+                alt="loading lock"
+                width={90}
+                height={30}
+              />
               <CardTitle className="py-1 text-2xl">
                 Privacy protection{" "}
               </CardTitle>
@@ -73,7 +92,12 @@ const Features = () => {
           </Card>{" "}
           <Card className="min-h-[350px] max-w-[350px] transition-all hover:shadow-2xl">
             <CardHeader>
-              <Image src={lock} alt="loading lock" width={90} height={30} />
+              <Image
+                src="/assets/lock.jpeg"
+                alt="loading lock"
+                width={90}
+                height={30}
+              />
               <CardTitle className="py-1 text-2xl">
                 Privacy protection{" "}
               </CardTitle>
@@ -86,7 +110,12 @@ const Features = () => {
           </Card>{" "}
           <Card className="min-h-[350px] max-w-[350px] transition-all hover:shadow-2xl">
             <CardHeader>
-              <Image src={lock} alt="loading lock" width={90} height={30} />
+              <Image
+                src="/assets/lock.jpeg"
+                alt="loading lock"
+                width={90}
+                height={30}
+              />
               <CardTitle className="py-1 text-2xl">
                 Privacy protection{" "}
               </CardTitle>

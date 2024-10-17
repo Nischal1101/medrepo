@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-// import { useParams } from "next/navigation";
 
 const ReportsPage = () => {
   // const { userid } = useParams();

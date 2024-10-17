@@ -1,7 +1,5 @@
 import Image from "next/image";
 import MaxWidthWrapper from "./MaxWidthWrapper";
-import hospital from "@/app/assets/hospital.jpeg";
-import doctor from "@/app/assets/doctor.jpeg";
 const Showoff = () => {
   return (
     <section className="my-10">
@@ -9,7 +7,7 @@ const Showoff = () => {
         <div className="flex justify-center gap-4">
           <div className="flex flex-col justify-center gap-4 px-6  py-8 ">
             <Image
-              src={doctor}
+              src="/assets/doctor.jpeg"
               width={120}
               height={20}
               alt={"loading doctor"}
@@ -23,7 +21,7 @@ const Showoff = () => {
           </div>
           <div className="flex flex-col justify-center gap-4 px-6  py-8 ">
             <Image
-              src={hospital}
+              src="/assets/hospital.jpeg"
               width={120}
               height={20}
               alt={"loading hopital"}

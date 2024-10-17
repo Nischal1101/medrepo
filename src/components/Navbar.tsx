@@ -3,7 +3,7 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import { navList } from "@/app/constants";
+import { navList } from "@/constants";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 

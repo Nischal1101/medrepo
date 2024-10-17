@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Josefin_Sans as JosefinSans } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
-import ClientLayout from "./clientLayout";
+import ClientLayout from "../providers/clientLayout";
 import React from "react";
 
 const josefinSans = JosefinSans({
