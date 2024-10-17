@@ -1,4 +1,3 @@
-import { ClerkProvider } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Josefin_Sans as JosefinSans } from "next/font/google";
@@ -23,21 +22,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en" className="h-full">
-        <body
-          className={cn(
-            "relative h-full font-josefin_sans antialiased",
-            josefinSans.variable
-          )}
-        >
-          <main className="relative flex min-h-screen flex-col">
-            <ClientLayout>{children}</ClientLayout>
-          </main>
+    <html lang="en" className="h-full">
+      <body
+        className={cn(
+          "relative h-full font-josefin_sans antialiased",
+          josefinSans.variable
+        )}
+      >
+        <main className="relative flex min-h-screen flex-col">
+          <ClientLayout>{children}</ClientLayout>
+        </main>
 
-          <Toaster position="top-center" richColors />
-        </body>
-      </html>
-    </ClerkProvider>
+        <Toaster position="top-center" richColors />
+      </body>
+    </html>
   );
 }
