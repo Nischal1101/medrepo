@@ -31,7 +31,9 @@ const Navbar = () => {
                 ))}
                 <div className="ml-auto flex items-center">
                   <div className="ml-5 hidden md:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                    <Button variant={"default"}>SignIn</Button>
+                    <Button variant={"default"}>
+                      <Link href={"/sign-in"}>SignIn</Link>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -51,7 +53,10 @@ const Navbar = () => {
                     <Link href={item.link}>{item.name}</Link>
                   </p>
                 ))}
-                <Button variant={"default"}>SignIn</Button>
+                <Button variant={"default"}>
+                  {" "}
+                  <Link href={"/sign-in"}>SignIn</Link>
+                </Button>
               </div>
             )}
           </div>

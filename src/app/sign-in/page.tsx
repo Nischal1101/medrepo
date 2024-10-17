@@ -37,7 +37,7 @@ const Login = () => {
               className="input input-bordered w-full max-w-xs px-8 transition delay-150 ease-in-out hover:border-gray-500 "
             />
           </div>
-          <div className="  my-4">
+          {/* <div className="  my-4">
             <div className="flex items-center justify-between">
               <Select>
                 <SelectTrigger className="w-[100px]">
@@ -51,8 +51,11 @@ const Login = () => {
               </Select>
               <p className="">Forgot Password</p>
             </div>
-          </div>
-          <Button type="submit" className="btn btn-primary w-full max-w-xs ">
+          </div> */}
+          <Button
+            type="submit"
+            className="btn btn-primary mt-4 w-full max-w-xs "
+          >
             <span className="loading loading-spinner"></span>
             Log in
           </Button>
