@@ -6,34 +6,41 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { navList } from "@/app/constants";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { SignedOut, SignInButton } from "@clerk/nextjs";
+import { SignedIn, UserButton } from "@clerk/clerk-react";
 
 const Navbar = () => {
   const [menu, setMenu] = useState<boolean>(false);
   const pathname = usePathname();
   return (
-    <div className="bg-white sticky z-50 top-0 inset-x-0 ">
+    <div className="sticky inset-x-0 top-0 z-50 bg-white ">
       <header className=" bg-white">
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">
             <div className="flex h-16 items-center justify-between">
               <h1 className="text-3xl font-bold text-primary">MedRepo.</h1>
-              <div className=" hidden md:flex gap-4 items-center ">
+              <div className=" hidden items-center gap-4 md:flex ">
                 {navList.map((item, index) => (
                   <Link
                     href={item.link}
-                    key={item.link}
-                    className={`hover:text-primary  transition-all ${
-                      item.link === pathname && "text-primary border-primary"
+                    key={index}
+                    className={`transition-all  hover:text-primary ${
+                      item.link === pathname && "border-primary text-primary"
                     }`}
                   >
-                    <p className="text-md">{item.name}</p>
+                    <p className="font-medium">{item.name}</p>
                   </Link>
                 ))}
                 <div className="ml-auto flex items-center">
-                  <div className="hidden md:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6 ml-5">
-                    <Button variant={"default"}>
-                      <Link href="/sign-in">Sign in</Link>
-                    </Button>
+                  <div className="ml-5 hidden md:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                    <SignedOut>
+                      <Button variant={"default"}>
+                        <SignInButton />
+                      </Button>
+                    </SignedOut>
+                    <SignedIn>
+                      <UserButton />
+                    </SignedIn>
                   </div>
                 </div>
               </div>
@@ -47,15 +54,20 @@ const Navbar = () => {
             </div>
             {/* Todo: Add transition on opening and closing hamburger. */}
             {menu && (
-              <div className="md:hidden flex flex-col gap-4 mb-4 mt-8  ">
+              <div className="mb-4 mt-8 flex flex-col gap-4 md:hidden  ">
                 {navList.map((item) => (
-                  <p key={item.link}>
+                  <p key={item.link} onClick={() => setMenu(!menu)}>
                     <Link href={item.link}>{item.name}</Link>
                   </p>
                 ))}
-                <Button variant={"default"} className="mx-auto">
-                  <Link href="/sign-in">Sign in</Link>
-                </Button>
+                <SignedOut>
+                  <Button variant={"default"}>
+                    <SignInButton />
+                  </Button>
+                </SignedOut>
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
               </div>
             )}
           </div>

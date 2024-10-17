@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Josefin_Sans } from "next/font/google";
+import { Josefin_Sans as JosefinSans } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import ClientLayout from "./clientLayout";
+import React from "react";
 
-const josefin_sans = Josefin_Sans({
+const josefinSans = JosefinSans({
   subsets: ["latin"],
   variable: "--font-josefin_sans",
 });
@@ -25,10 +26,10 @@ export default function RootLayout({
       <body
         className={cn(
           "relative h-full font-josefin_sans antialiased",
-          josefin_sans.variable
+          josefinSans.variable
         )}
       >
-        <main className="relative flex flex-col min-h-screen">
+        <main className="relative flex min-h-screen flex-col">
           <ClientLayout>{children}</ClientLayout>
         </main>
 

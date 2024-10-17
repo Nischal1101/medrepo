@@ -18,8 +18,8 @@ const Features = () => {
             Here are the main points you need to know about MedRepo:
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 items-center place-items-center">
-          <Card className="max-w-[350px] hover:shadow-2xl transition-all min-h-[350px]">
+        <div className="mt-8 grid grid-cols-1 place-items-center items-center gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <Card className="min-h-[350px] max-w-[350px] transition-all hover:shadow-2xl">
             <CardHeader>
               <Image src={lock} alt="loading lock" width={90} height={30} />
               <CardTitle className="py-1 text-2xl">
@@ -32,7 +32,7 @@ const Features = () => {
               </CardDescription>
             </CardHeader>
           </Card>{" "}
-          <Card className="max-w-[350px] hover:shadow-2xl transition-all min-h-[350px]">
+          <Card className="min-h-[350px] max-w-[350px] transition-all hover:shadow-2xl">
             <CardHeader>
               <Image src={lock} alt="loading lock" width={90} height={30} />
               <CardTitle className="py-1 text-2xl">
@@ -45,7 +45,7 @@ const Features = () => {
               </CardDescription>
             </CardHeader>
           </Card>{" "}
-          <Card className="max-w-[350px] hover:shadow-2xl transition-all min-h-[350px]">
+          <Card className="min-h-[350px] max-w-[350px] transition-all hover:shadow-2xl">
             <CardHeader>
               <Image src={lock} alt="loading lock" width={90} height={30} />
               <CardTitle className="py-1 text-2xl">
@@ -58,7 +58,7 @@ const Features = () => {
               </CardDescription>
             </CardHeader>
           </Card>{" "}
-          <Card className="max-w-[350px] hover:shadow-2xl transition-all min-h-[350px]">
+          <Card className="min-h-[350px] max-w-[350px] transition-all hover:shadow-2xl">
             <CardHeader>
               <Image src={lock} alt="loading lock" width={90} height={30} />
               <CardTitle className="py-1 text-2xl">
@@ -71,7 +71,7 @@ const Features = () => {
               </CardDescription>
             </CardHeader>
           </Card>{" "}
-          <Card className="max-w-[350px] hover:shadow-2xl transition-all min-h-[350px]">
+          <Card className="min-h-[350px] max-w-[350px] transition-all hover:shadow-2xl">
             <CardHeader>
               <Image src={lock} alt="loading lock" width={90} height={30} />
               <CardTitle className="py-1 text-2xl">
@@ -84,7 +84,7 @@ const Features = () => {
               </CardDescription>
             </CardHeader>
           </Card>{" "}
-          <Card className="max-w-[350px] hover:shadow-2xl transition-all min-h-[350px]">
+          <Card className="min-h-[350px] max-w-[350px] transition-all hover:shadow-2xl">
             <CardHeader>
               <Image src={lock} alt="loading lock" width={90} height={30} />
               <CardTitle className="py-1 text-2xl">
