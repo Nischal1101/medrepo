@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -19,6 +20,7 @@
     "@tanstack/react-table": "^8.20.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "drizzle-orm": "^0.35.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-tailwindcss": "^3.17.5",
@@ -26,6 +28,7 @@
     "next": "14.2.11",
     "next-auth": "^4.24.8",
     "next-themes": "^0.3.0",
+    "postgres": "^3.4.4",
     "prettier": "^3.3.3",
     "react": "^18",
     "react-dom": "^18",
@@ -40,6 +43,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "drizzle-kit": "^0.26.2",
     "eslint": "8.57.1",
     "eslint-config-next": "14.2.15",
     "postcss": "^8",
