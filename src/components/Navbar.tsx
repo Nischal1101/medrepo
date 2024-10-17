@@ -6,8 +6,6 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { navList } from "@/app/constants";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { SignedOut, SignInButton } from "@clerk/nextjs";
-import { SignedIn, UserButton } from "@clerk/clerk-react";
 
 const Navbar = () => {
   const [menu, setMenu] = useState<boolean>(false);
@@ -33,14 +31,7 @@ const Navbar = () => {
                 ))}
                 <div className="ml-auto flex items-center">
                   <div className="ml-5 hidden md:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                    <SignedOut>
-                      <Button variant={"default"}>
-                        <SignInButton />
-                      </Button>
-                    </SignedOut>
-                    <SignedIn>
-                      <UserButton />
-                    </SignedIn>
+                    <Button variant={"default"}>SignIn</Button>
                   </div>
                 </div>
               </div>
@@ -60,14 +51,7 @@ const Navbar = () => {
                     <Link href={item.link}>{item.name}</Link>
                   </p>
                 ))}
-                <SignedOut>
-                  <Button variant={"default"}>
-                    <SignInButton />
-                  </Button>
-                </SignedOut>
-                <SignedIn>
-                  <UserButton />
-                </SignedIn>
+                <Button variant={"default"}>SignIn</Button>
               </div>
             )}
           </div>
