@@ -5,7 +5,6 @@ import {
   date,
   integer,
   primaryKey,
-  time,
   timestamp,
 } from "drizzle-orm/pg-core";
 
@@ -82,18 +81,3 @@ export const hospitalPatients = pgTable(
     pk: primaryKey({ columns: [table.hospitalId, table.patientId] }),
   })
 );
-
-export const appointments = pgTable("appointments", {
-  id: serial("id").primaryKey(),
-  hospitalId: integer("hospital_id")
-    .references(() => HospitalTable.id)
-    .notNull(),
-  doctorId: integer("doctor_id")
-    .references(() => DoctorTable.id)
-    .notNull(),
-  patientId: integer("patient_id")
-    .references(() => PatientTable.id)
-    .notNull(),
-  appointmentDate: date("appointment_date").notNull(),
-  appointmentTime: time("appointment_time").notNull(),
-});
