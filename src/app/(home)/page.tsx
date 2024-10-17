@@ -3,6 +3,7 @@ import MaxWidthWrapper from "../../components/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
 import Features from "@/components/Features";
 import Showoff from "@/components/Showoff";
+import Link from "next/link";
 
 const Home = () => {
   return (
@@ -20,9 +21,9 @@ const Home = () => {
           </h2>
           <div className="mt-8 flex flex-col items-center justify-center gap-6 md:mt-16 md:flex-row md:gap-2">
             <Button className=" px-12 md:px-20">Explore</Button>
-            <Button variant="ghost" className=" px-12 md:px-20">
+            <Link href="/reports" className=" px-12 md:px-20">
               Reports &rarr;
-            </Button>
+            </Link>
           </div>
         </div>
       </MaxWidthWrapper>
