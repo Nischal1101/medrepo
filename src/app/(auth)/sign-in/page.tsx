@@ -1,15 +1,16 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 "use client";
 import { signIn } from "next-auth/react";
+import { LockKeyhole, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { LockKeyhole, Mail } from "lucide-react";
-import email from "next-auth/providers/email";
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/validators/LoginSchema";
 import { z } from "zod";
+import Image from "next/image";
 
 const Login = () => {
   type Schema = z.infer<typeof loginSchema>;
@@ -18,11 +19,15 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<Schema>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
     resolver: zodResolver(loginSchema),
   });
   const onSubmit = async (data: Schema) => {
     await signIn("credentials", {
-      email,
+      data,
       redirect: false,
     });
   };
@@ -69,7 +74,26 @@ const Login = () => {
             <span className="loading loading-spinner"></span>
             Log in
           </Button>
-          <Button onClick={() => signIn("google")}>Sign In with Google</Button>
+          <div className="mt-2 flex items-center gap-2">
+            <div className="h-px w-1/2 bg-gray-200"></div>
+            <span>or</span>
+            <div className="h-px w-1/2 bg-gray-200"></div>
+          </div>
+          <Button
+            variant={"outline"}
+            onClick={() => signIn("google")}
+            className="mt-4 w-full rounded-lg border border-black"
+          >
+            <div className="flex items-center justify-center gap-4">
+              <Image
+                src="/assets/google.png"
+                height={20}
+                width={30}
+                alt="loading google image"
+              />
+              <span>Sign In with Google</span>
+            </div>
+          </Button>
         </form>
         <hr className="my-8" />
 
