@@ -30,7 +30,9 @@ export default function RootLayout({
         )}
       >
         <main className="relative flex min-h-screen flex-col">
+          {/* <AuthSessionProvider> */}
           <ClientLayout>{children}</ClientLayout>
+          {/* </AuthSessionProvider> */}
         </main>
 
         <Toaster position="top-center" richColors />

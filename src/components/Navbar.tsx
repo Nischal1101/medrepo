@@ -6,8 +6,11 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { navList } from "@/constants";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const Navbar = () => {
+  const { data: session } = useSession();
+  console.log(session);
   const [menu, setMenu] = useState<boolean>(false);
   const pathname = usePathname();
   return (

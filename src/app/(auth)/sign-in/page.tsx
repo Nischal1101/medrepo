@@ -46,7 +46,7 @@ const Login = () => {
               className={`input input-bordered w-full max-w-xs px-8 transition delay-150 ease-in-out hover:border-gray-500 ${errors.email ? "focus-visible:ring-red-500" : ""}`}
             />
             {errors.email && (
-              <p className=" mt-2 text-sm text-red-500">
+              <p className="mt-1 self-start  text-sm text-red-500">
                 {errors.email.message}
               </p>
             )}
@@ -60,9 +60,9 @@ const Login = () => {
               id="password"
               className={`input input-bordered w-full max-w-xs px-8 transition delay-150 ease-in-out hover:border-gray-500 ${errors.email ? "focus-visible:ring-red-500" : ""}`}
             />
-            {errors.email && (
-              <p className=" mt-2 text-sm text-red-500">
-                {errors.email.message}
+            {errors.password && (
+              <p className="mt-1 self-start text-sm text-red-500">
+                {errors?.password.message}
               </p>
             )}
           </div>
@@ -74,27 +74,29 @@ const Login = () => {
             <span className="loading loading-spinner"></span>
             Log in
           </Button>
-          <div className="mt-2 flex items-center gap-2">
-            <div className="h-px w-1/2 bg-gray-200"></div>
-            <span>or</span>
-            <div className="h-px w-1/2 bg-gray-200"></div>
-          </div>
-          <Button
-            variant={"outline"}
-            onClick={() => signIn("google")}
-            className="mt-4 w-full rounded-lg border border-black"
-          >
-            <div className="flex items-center justify-center gap-4">
-              <Image
-                src="/assets/google.png"
-                height={20}
-                width={30}
-                alt="loading google image"
-              />
-              <span>Sign In with Google</span>
-            </div>
-          </Button>
         </form>
+        <div className="mt-2 flex items-center gap-2">
+          <div className="h-px w-1/2 bg-gray-200"></div>
+          <span>or</span>
+          <div className="h-px w-1/2 bg-gray-200"></div>
+        </div>
+        <Button
+          variant={"outline"}
+          onClick={async () => {
+            await signIn("google", { redirectTo: "/" });
+          }}
+          className="mt-4 w-full rounded-lg border border-black"
+        >
+          <div className="flex items-center justify-center gap-4">
+            <Image
+              src="/assets/google.png"
+              height={20}
+              width={30}
+              alt="loading google image"
+            />
+            <span>Sign In with Google</span>
+          </div>
+        </Button>
         <hr className="my-8" />
 
         <p className="mt-3 text-center">
