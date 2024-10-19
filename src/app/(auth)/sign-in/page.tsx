@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import { LockKeyhole, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +13,8 @@ import { z } from "zod";
 import Image from "next/image";
 
 const Login = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   type Schema = z.infer<typeof loginSchema>;
   const {
     register,
@@ -26,10 +28,17 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   });
   const onSubmit = async (data: Schema) => {
-    await signIn("credentials", {
-      data,
-      redirect: false,
-    });
+    try {
+      await signIn("credentials", {
+        redirect: false,
+        data,
+      });
+      const callbackUrl = searchParams.get("callbackUrl");
+      router.push(callbackUrl || "/");
+      router.refresh();
+    } catch (error: unknown) {
+      console.log(error);
+    }
   };
   return (
     <div className="flex h-screen items-center justify-center  px-4 sm:px-6 lg:px-8">
@@ -83,7 +92,7 @@ const Login = () => {
         <Button
           variant={"outline"}
           onClick={async () => {
-            await signIn("google", { redirectTo: "/" });
+            await signIn("google");
           }}
           className="mt-4 w-full rounded-lg border border-black"
         >

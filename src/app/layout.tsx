@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import ClientLayout from "../providers/clientLayout";
 import React from "react";
+import AuthSessionProvider from "@/providers/AuthSessionProvider";
 
 const josefinSans = JosefinSans({
   subsets: ["latin"],
@@ -30,9 +31,9 @@ export default function RootLayout({
         )}
       >
         <main className="relative flex min-h-screen flex-col">
-          {/* <AuthSessionProvider> */}
-          <ClientLayout>{children}</ClientLayout>
-          {/* </AuthSessionProvider> */}
+          <AuthSessionProvider>
+            <ClientLayout>{children}</ClientLayout>
+          </AuthSessionProvider>
         </main>
 
         <Toaster position="top-center" richColors />
