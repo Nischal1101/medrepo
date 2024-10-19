@@ -7,10 +7,11 @@ import { navList } from "@/constants";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import LogoutAvatar from "./LogoutAvatar";
 
 const Navbar = () => {
   const { data: session } = useSession();
-  console.log(session);
+  console.log(session?.user);
   const [menu, setMenu] = useState<boolean>(false);
   const pathname = usePathname();
   return (
@@ -34,9 +35,13 @@ const Navbar = () => {
                 ))}
                 <div className="ml-auto flex items-center">
                   <div className="ml-5 hidden md:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                    <Button variant={"default"}>
-                      <Link href={"/sign-in"}>SignIn</Link>
-                    </Button>
+                    {session?.user ? (
+                      <LogoutAvatar />
+                    ) : (
+                      <Button variant={"default"}>
+                        <Link href={"/sign-in"}>SignIn</Link>
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -50,16 +55,21 @@ const Navbar = () => {
             </div>
             {/* Todo: Add transition on opening and closing hamburger. */}
             {menu && (
-              <div className="mb-4 mt-8 flex flex-col gap-4 md:hidden  ">
+              <div className="mb-4 mt-12 flex flex-col gap-4 md:hidden  ">
                 {navList.map((item) => (
                   <p key={item.link} onClick={() => setMenu(!menu)}>
                     <Link href={item.link}>{item.name}</Link>
                   </p>
                 ))}
-                <Button variant={"default"}>
-                  {" "}
-                  <Link href={"/sign-in"}>SignIn</Link>
-                </Button>
+                <div>
+                  {session?.user ? (
+                    <LogoutAvatar />
+                  ) : (
+                    <Button variant={"default"}>
+                      <Link href={"/sign-in"}>SignIn</Link>
+                    </Button>
+                  )}
+                </div>
               </div>
             )}
           </div>
