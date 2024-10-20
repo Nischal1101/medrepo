@@ -1,6 +1,6 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 "use client";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { LockKeyhole, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,9 @@ import Image from "next/image";
 
 const Login = () => {
   const router = useRouter();
+  const { data: session } = useSession();
+
+  if (session?.user) router.push("/");
   const searchParams = useSearchParams();
   type Schema = z.infer<typeof loginSchema>;
   const {
@@ -31,11 +34,13 @@ const Login = () => {
     try {
       await signIn("credentials", {
         redirect: false,
-        data,
+        email: data.email,
+        password: data.password,
+        provider: "credentials",
       });
       const callbackUrl = searchParams.get("callbackUrl");
       router.push(callbackUrl || "/");
-      router.refresh();
+      // router.refresh();
     } catch (error: unknown) {
       console.log(error);
     }
@@ -89,23 +94,34 @@ const Login = () => {
           <span>or</span>
           <div className="h-px w-1/2 bg-gray-200"></div>
         </div>
-        <Button
-          variant={"outline"}
-          onClick={async () => {
-            await signIn("google");
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            try {
+              await signIn("google");
+              const callbackUrl = searchParams.get("callbackUrl");
+              router.push(callbackUrl || "/");
+              // router.refresh();
+            } catch (error) {
+              console.log(error);
+            }
           }}
-          className="mt-4 w-full rounded-lg border border-black"
         >
-          <div className="flex items-center justify-center gap-4">
-            <Image
-              src="/assets/google.png"
-              height={20}
-              width={30}
-              alt="loading google image"
-            />
-            <span>Sign In with Google</span>
-          </div>
-        </Button>
+          <Button
+            variant={"outline"}
+            className="mt-4 w-full rounded-lg border border-black"
+          >
+            <div className="flex items-center justify-center gap-4">
+              <Image
+                src="/assets/google.png"
+                height={20}
+                width={30}
+                alt="loading google image"
+              />
+              <span>Sign In with Google</span>
+            </div>
+          </Button>
+        </form>
         <hr className="my-8" />
 
         <p className="mt-3 text-center">
