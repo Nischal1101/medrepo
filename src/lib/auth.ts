@@ -1,58 +1,109 @@
-import { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-/*
-import { eq } from "drizzle-orm";
-import GoogleProvider from "next-auth/providers/google";
-import db from "./db/db";
-import { UserTable } from "./db/Schema";
-import email from "next-auth/providers/email";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import db from "./db/db";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import db from "./db/db";
 import bcrypt from "bcrypt";
 import { UserTable } from "@/lib/db/Schema";
 import { eq } from "drizzle-orm";
-*/
 
 export const authOptions: NextAuthOptions = {
-  // adapter: DrizzleAdapter(db),
   providers: [
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_CLIENT_ID as string,
-    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    //   async profile(profile) {
-    //     console.log(profile);
-    //     return profile;
-    //   },
-    // }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
-      // `credentials` is used to generate a form on the sign in page.
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: "Username", type: "text" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize() {
-        // Add logic here to look up the user from the credentials supplied
-        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
-
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
-
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+      async authorize(credentials): Promise<any> {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Email and password required");
         }
+
+        const users = await db
+          .select()
+          .from(UserTable)
+          .where(eq(UserTable.email, credentials.email));
+
+        if (users.length === 0) {
+          throw new Error("User not found");
+        }
+
+        const user = users[0];
+
+        if (user.provider !== "credentials") {
+          throw new Error("Please use the appropriate sign-in method");
+        }
+
+        const match = await bcrypt.compare(
+          credentials.password,
+          user.password as string
+        );
+
+        if (!match) {
+          throw new Error("Incorrect password");
+        }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        };
       },
     }),
   ],
+  callbacks: {
+    async signIn({ account, profile }) {
+      if (account?.provider === "google") {
+        const existingUser = await db
+          .select()
+          .from(UserTable)
+          .where(eq(UserTable.email, profile?.email as string))
+          .limit(1);
 
+        if (existingUser.length === 0) {
+          await db.insert(UserTable).values({
+            name: profile?.name as string,
+            email: profile?.email as string,
+            provider: "google",
+            role: "patient", // Set default role for Google sign-ins
+          });
+        }
+      }
+      return true;
+    },
+    async jwt({ token, user, account }) {
+      if (user) {
+        token.role = user.role;
+        token.id = Number(user.id);
+      }
+      if (account?.provider === "google") {
+        const users = await db
+          .select()
+          .from(UserTable)
+          .where(eq(UserTable.email, token.email as string))
+          .limit(1);
+        if (users.length > 0) {
+          token.role = users[0].role;
+          token.id = users[0].id;
+        }
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.role = token.role as string;
+        session.user.id = token.id;
+      }
+      return session;
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/sign-in",
