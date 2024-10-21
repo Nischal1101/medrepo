@@ -2,7 +2,12 @@ import { withAuth } from "next-auth/middleware";
 
 export default withAuth({
   callbacks: {
-    authorized: ({ token }) => !!token,
+    authorized: ({ token, req }) => {
+      if (token && req.nextUrl.pathname.startsWith("/upload-report")) {
+        return token.role === "hospital";
+      }
+      return !!token;
+    },
   },
 });
 
