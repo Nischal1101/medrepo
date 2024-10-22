@@ -22,17 +22,25 @@ const Navbar = () => {
             <div className="flex h-16 items-center justify-between">
               <h1 className="text-3xl font-bold text-primary">MedRepo.</h1>
               <div className=" hidden items-center gap-4 md:flex ">
-                {navList.map((item, index) => (
-                  <Link
-                    href={item.link}
-                    key={index}
-                    className={`transition-all  hover:text-primary ${
-                      item.link === pathname && "border-primary text-primary"
-                    }`}
-                  >
-                    <p className="font-medium">{item.name}</p>
-                  </Link>
-                ))}
+                {navList
+                  .filter((item) => {
+                    const res = item.role.includes(
+                      (session?.user.role as string) || "unauthorized"
+                    );
+                    console.log(res);
+                    return res;
+                  })
+                  .map((item, index) => (
+                    <Link
+                      href={item.link}
+                      key={index}
+                      className={`transition-all  hover:text-primary ${
+                        item.link === pathname && "border-primary text-primary"
+                      }`}
+                    >
+                      <p className="font-medium">{item.name}</p>
+                    </Link>
+                  ))}
                 <div className="ml-auto flex items-center">
                   <div className="ml-5 hidden md:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                     {session?.user ? (
