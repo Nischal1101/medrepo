@@ -25,17 +25,17 @@ export const navList = [
   {
     name: "Home",
     link: "/",
-    role: "user",
+    role: ["patient", "unauthorized"],
   },
 
   {
     name: "Upload",
     link: "/upload-report",
-    role: "hospital",
+    role: ["hospital"],
   },
   {
     name: "Reports",
     link: "/reports/userid",
-    role: ["user"],
+    role: ["patient", "doctor", "unauthorized"],
   },
 ];
