@@ -1,7 +1,7 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 "use client";
 import { signIn, useSession } from "next-auth/react";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { LockKeyhole, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,8 +16,9 @@ import Image from "next/image";
 const Login = () => {
   const router = useRouter();
   const { data: session } = useSession();
-
-  if (session?.user) router.push("/");
+  useEffect(() => {
+    if (session?.user) router.push("/");
+  }, []);
   const searchParams = useSearchParams();
   type Schema = z.infer<typeof loginSchema>;
   const {
@@ -33,14 +34,18 @@ const Login = () => {
   });
   const onSubmit = async (data: Schema) => {
     try {
-      await signIn("credentials", {
+      const res = await signIn("credentials", {
         redirect: false,
         email: data.email,
         password: data.password,
         provider: "credentials",
       });
-      const callbackUrl = searchParams.get("callbackUrl");
-      router.push(callbackUrl || "/");
+      if (res?.error) console.error(res.error);
+      else {
+        const callbackUrl = searchParams.get("callbackUrl");
+        console.log("callbackRul is", callbackUrl);
+        router.push(callbackUrl || "/");
+      }
       // router.refresh();
     } catch (error: unknown) {
       console.log(error);

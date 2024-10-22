@@ -4,7 +4,7 @@ import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import db from "./db/db";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { UserTable } from "@/lib/db/Schema";
 import { eq } from "drizzle-orm";
 
@@ -39,7 +39,6 @@ export const authOptions: NextAuthOptions = {
         if (user.provider !== "credentials") {
           throw new Error("Please use the appropriate sign-in method");
         }
-
         const match = await bcrypt.compare(
           credentials.password,
           user.password as string
@@ -48,7 +47,6 @@ export const authOptions: NextAuthOptions = {
         if (!match) {
           throw new Error("Incorrect password");
         }
-
         return {
           id: user.id,
           name: user.name,
