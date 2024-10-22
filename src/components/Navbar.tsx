@@ -27,7 +27,6 @@ const Navbar = () => {
                     const res = item.role.includes(
                       (session?.user.role as string) || "unauthorized"
                     );
-                    console.log(res);
                     return res;
                   })
                   .map((item, index) => (
@@ -41,8 +40,8 @@ const Navbar = () => {
                       <p className="font-medium">{item.name}</p>
                     </Link>
                   ))}
-                <div className="ml-auto flex items-center">
-                  <div className="ml-5 hidden md:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                <div className="ml-6 max-w-[32px]">
+                  <div className="hidden md:flex ">
                     {session?.user ? (
                       <LogoutAvatar />
                     ) : (
@@ -64,11 +63,18 @@ const Navbar = () => {
             {/* Todo: Add transition on opening and closing hamburger. */}
             {menu && (
               <div className="mb-4 mt-12 flex flex-col gap-4 md:hidden  ">
-                {navList.map((item) => (
-                  <p key={item.link} onClick={() => setMenu(!menu)}>
-                    <Link href={item.link}>{item.name}</Link>
-                  </p>
-                ))}
+                {navList
+                  .filter((item) => {
+                    const res = item.role.includes(
+                      (session?.user.role as string) || "unauthorized"
+                    );
+                    return res;
+                  })
+                  .map((item) => (
+                    <p key={item.link} onClick={() => setMenu(!menu)}>
+                      <Link href={item.link}>{item.name}</Link>
+                    </p>
+                  ))}
                 <div>
                   {session?.user ? (
                     <LogoutAvatar />
