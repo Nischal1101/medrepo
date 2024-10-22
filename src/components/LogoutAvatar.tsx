@@ -25,9 +25,11 @@ const LogoutAvatar = () => {
         <DropdownMenuContent>
           <DropdownMenuItem>
             <Button
+              type="submit"
               className="mt-1"
               variant={"ghost"}
-              onClick={async () => {
+              onClick={async (e) => {
+                e.preventDefault();
                 await signOut();
               }}
             >
