@@ -24,6 +24,7 @@ const Login = () => {
     if (session?.user) router.push("/");
   }, [session?.user]);
   const searchParams = useSearchParams();
+  // const role = searchParams.get("role");
   type Schema = z.infer<typeof loginSchema>;
   const {
     register,
@@ -45,6 +46,7 @@ const Login = () => {
         redirect: false,
         email: data.email,
         password: data.password,
+        // role: role || "patient",
         provider: "credentials",
       });
       console.log(res);
@@ -56,7 +58,6 @@ const Login = () => {
       } else {
         toast.success("user logged in Successfully!");
         const callbackUrl = searchParams.get("callbackUrl");
-        console.log("callbackRul is", callbackUrl);
         router.push(callbackUrl || "/");
       }
       // router.refresh();

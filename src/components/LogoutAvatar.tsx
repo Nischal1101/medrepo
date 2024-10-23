@@ -8,6 +8,7 @@ import {
 import { Button } from "./ui/button";
 import { signOut } from "next-auth/react";
 import { toast } from "sonner";
+import { redirect } from "next/navigation";
 
 const LogoutAvatar = () => {
   return (
@@ -35,6 +36,7 @@ const LogoutAvatar = () => {
                 if (!res) {
                   return toast.error("Something went wrong");
                 } else {
+                  redirect("/");
                   return toast.success("successfully logged out");
                 }
               }}

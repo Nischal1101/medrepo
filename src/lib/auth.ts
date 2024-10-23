@@ -4,7 +4,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import db from "./db/db";
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
 import { UserTable } from "@/lib/db/Schema";
 import { eq } from "drizzle-orm";
 
@@ -31,6 +31,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .where(eq(UserTable.email, credentials.email as string));
 
         if (users.length === 0) {
+          console.log("what the heell no user??");
           throw new Error("User not found");
         }
 
@@ -39,11 +40,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (user.provider !== "credentials") {
           throw new Error("Please use the appropriate sign-in method");
         }
-        const match = await bcrypt.compare(
-          credentials.password as string,
-          user.password as string
-        );
-
+        // const match = await bcrypt.compare(
+        //   credentials.password as string,
+        //   user.password as string
+        // );
+        const match = user.password === credentials.password;
         if (!match) {
           throw new Error("Incorrect password");
         }
@@ -57,6 +58,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    authorized: async ({ auth }) => {
+      // Logged in users are authenticated, otherwise redirect to login page
+
+      return !!auth;
+    },
     async signIn({ account, profile }) {
       if (account?.provider === "google") {
         const existingUser = await db

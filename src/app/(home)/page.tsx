@@ -4,8 +4,16 @@ import { Button } from "@/components/ui/button";
 import Features from "@/components/Features";
 import Showoff from "@/components/Showoff";
 import Link from "next/link";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-const Home = () => {
+const Home = async () => {
+  const session = await auth();
+  if (session && session.user.role === "hospital") {
+    redirect("/upload-report");
+  } else if (session && session.user.role === "doctor") {
+    redirect("reports/userid");
+  }
   return (
     <>
       <MaxWidthWrapper>
