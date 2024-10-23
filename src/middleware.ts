@@ -1,5 +1,4 @@
-import { withAuth } from "next-auth/middleware";
-
+/*
 export default withAuth({
   callbacks: {
     authorized: ({ token, req }) => {
@@ -10,7 +9,8 @@ export default withAuth({
     },
   },
 });
-
+*/
+export { auth as middleware } from "@/lib/auth";
 export const config = {
   matcher: ["/reports(/.*)?", "/upload-report"],
 };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable tailwindcss/no-custom-classname */
 "use client";
 import { signIn, useSession } from "next-auth/react";
@@ -12,18 +13,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/validators/LoginSchema";
 import { z } from "zod";
 import Image from "next/image";
+import { toast } from "sonner";
 
 const Login = () => {
   const router = useRouter();
   const { data: session } = useSession();
   useEffect(() => {
     if (session?.user) router.push("/");
-  }, []);
+  }, [session?.user]);
   const searchParams = useSearchParams();
   type Schema = z.infer<typeof loginSchema>;
   const {
     register,
     handleSubmit,
+
     formState: { errors },
   } = useForm<Schema>({
     defaultValues: {
@@ -40,15 +43,17 @@ const Login = () => {
         password: data.password,
         provider: "credentials",
       });
-      if (res?.error) console.error(res.error);
+      console.log(res);
+      if (res?.error) return toast.error(res.error);
       else {
+        toast.success("user logged in Successfully!");
         const callbackUrl = searchParams.get("callbackUrl");
         console.log("callbackRul is", callbackUrl);
         router.push(callbackUrl || "/");
       }
       // router.refresh();
-    } catch (error: unknown) {
-      console.log(error);
+    } catch (err: unknown) {
+      toast.error("something went wrong");
     }
   };
   return (

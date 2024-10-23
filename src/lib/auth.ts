@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import db from "./db/db";
@@ -8,7 +8,7 @@ import bcrypt from "bcryptjs";
 import { UserTable } from "@/lib/db/Schema";
 import { eq } from "drizzle-orm";
 
-export const authOptions: NextAuthOptions = {
+export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -28,7 +28,7 @@ export const authOptions: NextAuthOptions = {
         const users = await db
           .select()
           .from(UserTable)
-          .where(eq(UserTable.email, credentials.email));
+          .where(eq(UserTable.email, credentials.email as string));
 
         if (users.length === 0) {
           throw new Error("User not found");
@@ -40,7 +40,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Please use the appropriate sign-in method");
         }
         const match = await bcrypt.compare(
-          credentials.password,
+          credentials.password as string,
           user.password as string
         );
 
@@ -97,7 +97,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.role = token.role as string;
-        session.user.id = token.id;
+        // session.user.id = token.id;
       }
       return session;
     },
@@ -106,4 +106,4 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/sign-in",
   },
-};
+});
