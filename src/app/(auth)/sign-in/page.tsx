@@ -2,8 +2,8 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 "use client";
 import { signIn, useSession } from "next-auth/react";
-import React, { Suspense, useEffect } from "react";
-import { LockKeyhole, Mail } from "lucide-react";
+import React, { Suspense, useEffect, useState } from "react";
+import { LockKeyhole, Mail, Shell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -18,6 +18,8 @@ import { toast } from "sonner";
 const Login = () => {
   const router = useRouter();
   const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
+  const [error, isError] = useState(false);
   useEffect(() => {
     if (session?.user) router.push("/");
   }, [session?.user]);
@@ -37,6 +39,8 @@ const Login = () => {
   });
   const onSubmit = async (data: Schema) => {
     try {
+      setLoading(true);
+      isError(false);
       const res = await signIn("credentials", {
         redirect: false,
         email: data.email,
@@ -44,8 +48,11 @@ const Login = () => {
         provider: "credentials",
       });
       console.log(res);
-      if (res?.error) return toast.error("Incorrect credentials");
-      else {
+      setLoading(false);
+      if (res?.error) {
+        isError(true);
+        return toast.error("Incorrect credentials");
+      } else {
         toast.success("user logged in Successfully!");
         const callbackUrl = searchParams.get("callbackUrl");
         console.log("callbackRul is", callbackUrl);
@@ -98,9 +105,10 @@ const Login = () => {
 
             <Button
               type="submit"
+              disabled={loading || error}
               className="btn btn-primary mt-4 w-full max-w-xs "
             >
-              <span className="loading loading-spinner"></span>
+              {loading && <Shell className="mr-3  animate-spin" />}
               Log in
             </Button>
           </form>
@@ -113,7 +121,7 @@ const Login = () => {
             onSubmit={async (e) => {
               e.preventDefault();
               try {
-                await signIn("google");
+                await signIn("google", { redirect: false });
                 const callbackUrl = searchParams.get("callbackUrl");
                 router.push(callbackUrl || "/");
                 // router.refresh();

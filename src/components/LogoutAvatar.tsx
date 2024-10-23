@@ -7,6 +7,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { Button } from "./ui/button";
 import { signOut } from "next-auth/react";
+import { toast } from "sonner";
 
 const LogoutAvatar = () => {
   return (
@@ -30,7 +31,12 @@ const LogoutAvatar = () => {
               variant={"ghost"}
               onClick={async (e) => {
                 e.preventDefault();
-                await signOut();
+                const res = await signOut({ redirect: false });
+                if (!res) {
+                  return toast.error("Something went wrong");
+                } else {
+                  return toast.success("successfully logged out");
+                }
               }}
             >
               logout
