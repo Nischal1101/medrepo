@@ -51,7 +51,8 @@ const Login = () => {
       setLoading(false);
       if (res?.error) {
         isError(true);
-        return toast.error("Incorrect credentials");
+        toast.error("Incorrect credentials");
+        isError(false);
       } else {
         toast.success("user logged in Successfully!");
         const callbackUrl = searchParams.get("callbackUrl");
