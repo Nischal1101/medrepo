@@ -14,14 +14,19 @@ import { loginSchema } from "@/validators/LoginSchema";
 import { z } from "zod";
 import Image from "next/image";
 import { toast } from "sonner";
+import { isError } from "util";
 
 const Login = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [error, isError] = useState(false);
+
   useEffect(() => {
-    if (session?.user) router.push("/");
+    if (session?.user) {
+      const callbackUrl = searchParams.get("callbackUrl");
+      router.push(callbackUrl || "/");
+    }
   }, [session?.user]);
   const searchParams = useSearchParams();
   // const role = searchParams.get("role");
@@ -123,10 +128,13 @@ const Login = () => {
             onSubmit={async (e) => {
               e.preventDefault();
               try {
-                await signIn("google", { redirect: false });
-                const callbackUrl = searchParams.get("callbackUrl");
-                router.push(callbackUrl || "/");
-                // router.refresh();
+                const res = await signIn("google", { redirect: false });
+                if (res?.error) {
+                  toast.error("Incorrect credentials");
+                } else {
+                  const callbackUrl = searchParams.get("callbackUrl");
+                  router.push(callbackUrl || "/");
+                }
               } catch (error) {
                 console.log(error);
               }
