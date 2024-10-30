@@ -14,7 +14,7 @@ import { loginSchema } from "@/validators/LoginSchema";
 import { z } from "zod";
 import Image from "next/image";
 import { toast } from "sonner";
-import { isError } from "util";
+import { credentialsSignIn } from "@/actions/User";
 
 const Login = () => {
   const router = useRouter();
@@ -47,18 +47,11 @@ const Login = () => {
     try {
       setLoading(true);
       isError(false);
-      const res = await signIn("credentials", {
-        redirect: false,
-        email: data.email,
-        password: data.password,
-        // role: role || "patient",
-        provider: "credentials",
-      });
-      console.log(res);
+      const error = await credentialsSignIn(data);
       setLoading(false);
-      if (res?.error) {
+      if (error) {
         isError(true);
-        toast.error("Incorrect credentials");
+        toast.error(String(error));
         isError(false);
       } else {
         toast.success("user logged in Successfully!");
@@ -131,9 +124,6 @@ const Login = () => {
                 const res = await signIn("google", { redirect: false });
                 if (res?.error) {
                   toast.error("Incorrect credentials");
-                } else {
-                  const callbackUrl = searchParams.get("callbackUrl");
-                  router.push(callbackUrl || "/");
                 }
               } catch (error) {
                 console.log(error);
