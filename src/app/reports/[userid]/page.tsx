@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 
 const ReportsPage = () => {
-  // const { userid } = useParams();
+  
   return (
     <MaxWidthWrapper>
       <h1 className="mt-12 text-2xl md:mt-20 md:text-4xl ">
