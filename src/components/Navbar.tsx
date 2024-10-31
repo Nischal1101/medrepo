@@ -4,15 +4,27 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { navList } from "@/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import LogoutAvatar from "./LogoutAvatar";
 
 const Navbar = () => {
   const { data: session } = useSession();
-  console.log(session?.user);
+  console.log(session);
   const [menu, setMenu] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  console.log(session); // i have found that initially the session was null then i decided to get the session on demand and update the is Loggedin state
+  useEffect(() => {
+    const fetchSession = async () => {
+      const updatedSession = await getSession();
+      setIsLoggedIn(!!updatedSession?.user);
+    };
+
+    // Run fetchSession only if session is initially null
+    if (session === null) fetchSession();
+    else setIsLoggedIn(!!session?.user);
+  }, [session]);
   const pathname = usePathname();
   return (
     <div className="sticky inset-x-0 top-0 z-50 bg-white ">
@@ -42,7 +54,7 @@ const Navbar = () => {
                   ))}
                 <div className="ml-6 max-w-[32px]">
                   <div className="hidden md:flex ">
-                    {session?.user ? (
+                    {isLoggedIn ? (
                       <LogoutAvatar />
                     ) : (
                       <Button variant={"default"}>
