@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { LoaderCircle, LockKeyhole, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,9 +18,9 @@ import { credentialsSignIn } from "@/actions/User";
 
 const Login = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, isError] = useState(false);
-
   type Schema = z.infer<typeof loginSchema>;
   const {
     register,
@@ -45,10 +45,13 @@ const Login = () => {
         toast.error(String(error));
         isError(false);
       } else {
+        let path = "/";
         toast.success("user logged in Successfully!");
-        router.push("/");
+        if (searchParams.get("callbackUrl")) {
+          path = `${searchParams.get("callbackUrl")}`;
+        }
+        router.push(path);
       }
-      // router.refresh();
     } catch (err: unknown) {
       toast.error("something went wrong");
     }

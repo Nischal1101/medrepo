@@ -11,10 +11,9 @@ import LogoutAvatar from "./LogoutAvatar";
 
 const Navbar = () => {
   const { data: session } = useSession();
-  console.log(session);
   const [menu, setMenu] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  console.log(session); // i have found that initially the session was null then i decided to get the session on demand and update the is Loggedin state
+//   console.log(session); // i have found that initially the session was null then i decided to get the session on demand and update the is Loggedin state
   useEffect(() => {
     const fetchSession = async () => {
       const updatedSession = await getSession();
