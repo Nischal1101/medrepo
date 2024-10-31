@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable tailwindcss/no-custom-classname */
 "use client";
-import { signIn } from "next-auth/react";
-import React, { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
 import { LoaderCircle, LockKeyhole, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +17,16 @@ import { toast } from "sonner";
 import { credentialsSignIn } from "@/actions/User";
 
 const Login = () => {
+  const { data: session } = useSession();
+  console.log(session);
   const router = useRouter();
+  // very slow . first renders sign-in page then only slowly pushes to homepage.
+  useEffect(() => {
+    if (session) {
+      router.push("/");
+    }
+  }, [session, router]);
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, isError] = useState(false);
 
@@ -46,7 +55,8 @@ const Login = () => {
         isError(false);
       } else {
         toast.success("user logged in Successfully!");
-        router.push("/");
+        const callbackUrl = searchParams.get("callbackUrl");
+        router.push(callbackUrl || "/");
       }
       // router.refresh();
     } catch (err: unknown) {
