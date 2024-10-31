@@ -46,8 +46,7 @@ const Login = () => {
         isError(false);
       } else {
         toast.success("user logged in Successfully!");
-        const callbackUrl = searchParams.get("callbackUrl");
-        router.push(callbackUrl || "/");
+        router.push("/");
       }
       // router.refresh();
     } catch (err: unknown) {
