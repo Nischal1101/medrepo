@@ -19,7 +19,7 @@ const Home = async () => {
       <MaxWidthWrapper>
         <div className="py-28">
           <h1 className="text-center text-4xl font-semibold tracking-tight md:text-6xl">
-            Secure, Transparent, Efficient
+            Secure, Transparent, Efficient{" "}
             <span className="text-primary">Medical Report Repository </span>
           </h1>
           <h2 className="mt-6 text-center text-muted-foreground md:mt-8 md:text-xl">
