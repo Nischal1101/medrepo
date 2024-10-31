@@ -3,7 +3,7 @@
 "use client";
 import { signIn } from "next-auth/react";
 import React, { useState } from "react";
-import { LockKeyhole, Mail, Shell } from "lucide-react";
+import { LoaderCircle, LockKeyhole, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
@@ -95,7 +95,7 @@ const Login = () => {
             disabled={loading || error}
             className="btn btn-primary mt-4 w-full max-w-xs "
           >
-            {loading && <Shell className="mr-3  animate-spin" />}
+            {loading && <LoaderCircle className="mr-3  animate-spin" />}
             Log in
           </Button>
         </form>
