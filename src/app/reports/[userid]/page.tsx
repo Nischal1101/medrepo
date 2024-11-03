@@ -60,7 +60,7 @@ const ReportsPage = async ({
     .where(eq(ReportsTable.patientId, Number(userid)))
     .orderBy(ReportsTable.createdAt);
   console.log(data);
-  if (!data) {
+  if (data.length === 0) {
     return (
       <div className="flex min-h-screen items-center justify-center text-3xl">
         No data found
@@ -70,7 +70,7 @@ const ReportsPage = async ({
   return (
     <MaxWidthWrapper>
       <h1 className="mt-12 text-2xl md:mt-20 md:text-4xl ">
-        User&apos;s Reports{" "}
+        {data[0].patientName}&apos;s Reports{" "}
       </h1>
       <Table className="mt-12">
         <TableHeader className="md:text-lg">
@@ -83,54 +83,17 @@ const ReportsPage = async ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {/* {data.map((item) => (
+          {data.map((item) => (
             <TableRow className="md:text-lg" key={item.id}>
               <TableCell className="font-medium ">{item.id}</TableCell>
-              <TableCell></TableCell>
-              <TableCell>Godatwa Prasad</TableCell>
-              <TableCell>{item.createdAt.toLocaleString()}</TableCell>
+              <TableCell>{item.hospitalName}</TableCell>
+              <TableCell>{item.doctorName}</TableCell>
+              <TableCell>{item.createdAt.toLocaleDateString()}</TableCell>
               <TableCell className="text-right">
                 <DownloadButton url={item.attachmentUrl as string} />
               </TableCell>
             </TableRow>
-          ))} */}
-          {/*
-          <TableRow className="md:text-lg">
-            <TableCell className="font-medium ">001</TableCell>
-            <TableCell>Nobel</TableCell>
-            <TableCell>Godatwa Prasad</TableCell>
-            <TableCell>2081-02-05</TableCell>
-            <TableCell className="text-right">
-              <DownloadButton url="https://pdfobject.com/pdf/sample.pdf" />
-            </TableCell>
-          </TableRow>
-          <TableRow className="md:text-lg">
-            <TableCell className="font-medium ">001</TableCell>
-            <TableCell>Nobel</TableCell>
-            <TableCell>Godatwa Prasad</TableCell>
-            <TableCell>2081-02-05</TableCell>
-            <TableCell className="text-right">
-              <DownloadButton url="https://pdfobject.com/pdf/sample.pdf" />
-            </TableCell>
-          </TableRow>
-          <TableRow className="md:text-lg">
-            <TableCell className="font-medium ">001</TableCell>
-            <TableCell>Nobel</TableCell>
-            <TableCell>Godatwa Prasad</TableCell>
-            <TableCell>2081-02-05</TableCell>
-            <TableCell className="text-right">
-              <DownloadButton url="https://pdfobject.com/pdf/sample.pdf" />
-            </TableCell>
-          </TableRow>
-          <TableRow className="md:text-lg">
-            <TableCell className="font-medium ">001</TableCell>
-            <TableCell>Nobel</TableCell>
-            <TableCell>Godatwa Prasad</TableCell>
-            <TableCell>2081-02-05</TableCell>
-            <TableCell className="text-right">
-              <DownloadButton url="https://pdfobject.com/pdf/sample.pdf" />
-            </TableCell>
-          </TableRow> */}
+          ))}
         </TableBody>
       </Table>
     </MaxWidthWrapper>
