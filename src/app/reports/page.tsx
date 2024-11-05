@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { auth } from "@/lib/auth";
 import db from "@/lib/db/db";
 import {
   DoctorTable,
@@ -17,14 +18,13 @@ import {
   UserTable,
 } from "@/lib/db/Schema";
 import { eq, aliasedTable } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
-const ReportsPage = async ({
-  params,
-}: {
-  params: Promise<{ userid: string }>;
-}) => {
-  const userid = (await params).userid;
-  console.log("useid", userid);
+const ReportsPage = async () => {
+  const session = await auth();
+  if (!session?.user) redirect("/sign-in");
+  const userid = session.user.id;
+  console.log(userid);
 
   const patientUser = aliasedTable(UserTable, "patientUser");
   const hospitalUser = aliasedTable(UserTable, "hospitalUser");
@@ -67,6 +67,7 @@ const ReportsPage = async ({
       </div>
     );
   }
+
   return (
     <MaxWidthWrapper>
       <h1 className="mt-12 text-2xl md:mt-20 md:text-4xl ">
