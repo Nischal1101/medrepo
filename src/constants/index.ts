@@ -35,7 +35,7 @@ export const navList = [
   },
   {
     name: "Reports",
-    link: "/reports/userid",
+    link: "/reports",
     role: ["patient", "doctor", "unauthorized"],
   },
 ];

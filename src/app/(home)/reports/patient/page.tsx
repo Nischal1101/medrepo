@@ -1,3 +1,4 @@
+/*
 import DownloadButton from "@/components/DownloadButton";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import {
@@ -102,3 +103,12 @@ const ReportsPage = async () => {
 };
 
 export default ReportsPage;
+*/
+
+import React from "react";
+
+const page = () => {
+  return <div>hi from patient</div>;
+};
+
+export default page;

@@ -18,7 +18,6 @@ import { credentialsSignIn } from "@/actions/User";
 
 const Login = () => {
   const { data: session } = useSession();
-  console.log(session);
   const router = useRouter();
   // very slow . first renders sign-in page then only slowly pushes to homepage.
   useEffect(() => {

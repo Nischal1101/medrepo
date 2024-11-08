@@ -12,7 +12,7 @@ const Home = async () => {
   if (session && session.user.role === "hospital") {
     redirect("/upload-report");
   } else if (session && session.user.role === "doctor") {
-    redirect("reports/userid");
+    redirect("doctor/report");
   }
   return (
     <>
