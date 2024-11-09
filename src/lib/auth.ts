@@ -93,7 +93,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .from(UserTable)
           .where(eq(UserTable.email, token.email as string))
           .limit(1);
-        if (users.length > 0) {
+        if (users.length) {
           token.role = users[0].role;
           token.id = users[0].id;
         }
@@ -103,8 +103,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       if (session.user) {
         session.user.role = token.role as string;
-        // session.user.id = token.id;
+        session.user.id = token.id;
       }
+
       return session;
     },
   },
