@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 const ReportsPage = async () => {
   const session = await auth();
-  // if (!session?.user) redirect("/sign-in");
+  if (!session?.user) redirect("/sign-in");
   if (session?.user.role === "doctor") {
     redirect("/reports/doctor");
   }
