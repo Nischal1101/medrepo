@@ -4,17 +4,14 @@ import PatientTableSkeleton from "@/components/PatientTableSkeleton";
 
 import { auth } from "@/lib/auth";
 
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 const ReportsPage = async () => {
   const session = await auth();
-  console.log("the session is ", session);
-  if (!session?.user) redirect("/sign-in");
-  console.log("The session from patient page is", session.user);
-  const userid = session.user.id;
+
+  const userid = session?.user.id;
   console.log("The userId from patient page is", userid);
-  if (!session.user.id) {
+  if (!session?.user.id) {
     return <div>No user session</div>;
   }
 
