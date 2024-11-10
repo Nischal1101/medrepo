@@ -8,7 +8,6 @@ import { Suspense } from "react";
 
 const ReportsPage = async () => {
   const session = await auth();
-
   const userid = session?.user.id;
   console.log("The userId from patient page is", userid);
   if (!session?.user.id) {
@@ -21,7 +20,7 @@ const ReportsPage = async () => {
         Patient&apos;s Reports{" "}
       </h1>
       <Suspense fallback={<PatientTableSkeleton />}>
-        <PatientTable userid={userid} />
+        <PatientTable userid={userid as number} />
       </Suspense>
     </MaxWidthWrapper>
   );
