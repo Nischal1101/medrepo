@@ -15,7 +15,6 @@ import { z } from "zod";
 import Image from "next/image";
 import { toast } from "sonner";
 import { credentialsSignIn } from "@/actions/User";
-import Link from "next/link";
 
 const Login = () => {
   const { data: session } = useSession();
@@ -144,11 +143,7 @@ const Login = () => {
         <hr className="my-8" />
 
         <p className="mt-3 text-center">
-          Need an account? Register as
-          <p className="text-primary">
-            <Link href="/sign-up/doctor">Doctor</Link>/{" "}
-            <Link href={"sign-up/patient"}>Patient</Link>
-          </p>
+          Need an account? <span className="text-primary">Sign Up</span>
         </p>
       </div>
     </div>
