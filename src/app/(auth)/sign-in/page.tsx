@@ -1,121 +1,31 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable tailwindcss/no-custom-classname */
-"use client";
-import { signIn, useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
-import { LoaderCircle, LockKeyhole, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "@/validators/LoginSchema";
-import { z } from "zod";
+import SignInForm from "@/components/SignInForm";
 import Image from "next/image";
-import { toast } from "sonner";
-import { credentialsSignIn } from "@/actions/User";
 import Link from "next/link";
+import { toast } from "sonner";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-const Login = () => {
-  const { data: session } = useSession();
-  const router = useRouter();
-  // very slow . first renders sign-in page then only slowly pushes to homepage.
-  useEffect(() => {
-    if (session) {
-      router.push("/");
-    }
-  }, [session, router]);
-  const searchParams = useSearchParams();
-  const [loading, setLoading] = useState(false);
-  const [error, isError] = useState(false);
-
-  type Schema = z.infer<typeof loginSchema>;
-  const {
-    register,
-    handleSubmit,
-
-    formState: { errors },
-  } = useForm<Schema>({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-    resolver: zodResolver(loginSchema),
-  });
-  const onSubmit = async (data: Schema) => {
-    try {
-      setLoading(true);
-      isError(false);
-      const error = await credentialsSignIn(data);
-      setLoading(false);
-      if (error) {
-        isError(true);
-        toast.error(String(error));
-        isError(false);
-      } else {
-        toast.success("user logged in Successfully!");
-        const callbackUrl = searchParams.get("callbackUrl");
-        router.push(callbackUrl || "/");
-      }
-      // router.refresh();
-    } catch (err: unknown) {
-      toast.error("something went wrong");
-    }
-  };
+const Login = async () => {
+  const session = await auth();
+  if (session) {
+    redirect("/");
+  }
   return (
     <div className="flex h-screen items-center justify-center  px-4 sm:px-6 lg:px-8">
       <div className="w-96 p-8 shadow-2xl ">
         <h1 className="py-8 text-center text-4xl text-primary">MedRepo.</h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="relative flex flex-col items-center justify-center">
-            <Mail className="absolute left-2 top-[0.65rem] " size={15} />
-            <Input
-              type="email"
-              {...register("email")}
-              placeholder=" Your Email"
-              id="email"
-              className={`input input-bordered w-full max-w-xs px-8 transition delay-150 ease-in-out hover:border-gray-500 ${errors.email ? "focus-visible:ring-red-500" : ""}`}
-            />
-            {errors.email && (
-              <p className="mt-1 self-start  text-sm text-red-500">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-          <div className="relative mt-3 flex flex-col items-center justify-center ">
-            <LockKeyhole className="absolute left-2 top-[0.65rem]" size={15} />
-            <Input
-              type="password"
-              {...register("password")}
-              placeholder=" Your Password"
-              id="password"
-              className={`input input-bordered w-full max-w-xs px-8 transition delay-150 ease-in-out hover:border-gray-500 ${errors.email ? "focus-visible:ring-red-500" : ""}`}
-            />
-            {errors.password && (
-              <p className="mt-1 self-start text-sm text-red-500">
-                {errors?.password.message}
-              </p>
-            )}
-          </div>
-
-          <Button
-            type="submit"
-            disabled={loading || error}
-            className="btn btn-primary mt-4 w-full max-w-xs "
-          >
-            {loading && <LoaderCircle className="mr-3  animate-spin" />}
-            Log in
-          </Button>
-        </form>
+        <SignInForm />
         <div className="mt-2 flex items-center gap-2">
           <div className="h-px w-1/2 bg-gray-200"></div>
           <span>or</span>
           <div className="h-px w-1/2 bg-gray-200"></div>
         </div>
         <form
-          onSubmit={async (e) => {
-            e.preventDefault();
+          action={async () => {
+            "use server";
             try {
               const res = await signIn("google", { redirect: false });
               if (res?.error) {
@@ -142,14 +52,13 @@ const Login = () => {
           </Button>
         </form>
         <hr className="my-8" />
-
-        <p className="mt-3 text-center">
+        <div className="mt-3 text-center">
           Need an account? Register as
           <p className="text-primary">
             <Link href="/sign-up/doctor">Doctor</Link>/{" "}
             <Link href={"sign-up/patient"}>Patient</Link>
           </p>
-        </p>
+        </div>
       </div>
     </div>
   );
