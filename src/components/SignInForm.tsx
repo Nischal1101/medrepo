@@ -6,9 +6,9 @@ import { LockKeyhole, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import SignInBtn from "./SignInBtn";
 import { Input } from "./ui/input";
 import { useRouter } from "next/navigation";
+import AuthBtn from "./AuthBtn";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -70,7 +70,7 @@ export default function SignInForm() {
           </p>
         )}
       </div>
-      <SignInBtn />
+      <AuthBtn title={"Log In"} />
     </form>
   );
 }
