@@ -11,13 +11,7 @@ export const patientSignUpSchema = z.object({
     .string({ required_error: "phone is a required field" })
     .min(10)
     .max(13),
-  dob: z.string().refine(
-    (date) => {
-      const parsedDate = new Date(date);
-      return !isNaN(parsedDate.getTime()) && parsedDate < new Date();
-    },
-    {
-      message: "Date of birth must be a valid date",
-    }
-  ),
+  dob: z.date({
+    required_error: "A date of birth is required.",
+  }),
 });
