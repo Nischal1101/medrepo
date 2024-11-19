@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
 
-import SignInForm from "@/components/SignInForm";
+import { auth, signIn } from "@/lib/auth";
 import Image from "next/image";
 import Link from "next/link";
-import { toast } from "sonner";
-import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import SignInForm from "./_components/SigninForm";
 
 const Login = async () => {
   const session = await auth();
@@ -26,14 +24,7 @@ const Login = async () => {
         <form
           action={async () => {
             "use server";
-            try {
-              const res = await signIn("google", { redirect: false });
-              if (res?.error) {
-                toast.error("Incorrect credentials");
-              }
-            } catch (error) {
-              console.log(error);
-            }
+            await signIn("google");
           }}
         >
           <Button
@@ -56,7 +47,7 @@ const Login = async () => {
           Need an account? Register as
           <p className="text-primary">
             <Link href="/sign-up/doctor">Doctor</Link>/{" "}
-            <Link href={"sign-up/patient"}>Patient</Link>
+            <Link href={"sign-up"}>Patient</Link>
           </p>
         </div>
       </div>
