@@ -57,7 +57,7 @@ export const DoctorTable = pgTable("doctors", {
 
 export const PatientTable = pgTable("patients", {
   id: serial("id").primaryKey(),
-  dateOfBirth: date("date_of_birth"),
+  dob: date("date_of_birth"),
   phone: varchar("phone", { length: 20 }),
   userId: integer("user_id")
     .notNull()
