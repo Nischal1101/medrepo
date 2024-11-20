@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import db from "./db/db";
 // import bcrypt from "bcryptjs";
@@ -10,10 +8,6 @@ import { eq } from "drizzle-orm";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -22,7 +16,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials): Promise<any> {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Email and password required");
+          throw new CredentialsSignin({ cause: "Email and password required" });
         }
 
         const users = await db
@@ -31,22 +25,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .where(eq(UserTable.email, credentials.email as string));
 
         if (users.length === 0) {
-          console.log("what the heell no user??");
-          throw new Error("User not found");
+          throw new CredentialsSignin({ cause: "Incorrect email or password" });
         }
 
         const user = users[0];
 
-        if (user.provider !== "credentials") {
-          throw new Error("Please use the appropriate sign-in method");
-        }
         // const match = await bcrypt.compare(
         //   credentials.password as string,
         //   user.password as string
         // );
         const match = user.password === credentials.password;
         if (!match) {
-          throw new Error("Incorrect password");
+          throw new CredentialsSignin({ cause: "Incorrect email or password" });
         }
         return {
           id: user.id,
@@ -63,41 +53,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       return !!auth;
     },
-    async signIn({ account, profile }) {
-      if (account?.provider === "google") {
-        const existingUser = await db
-          .select()
-          .from(UserTable)
-          .where(eq(UserTable.email, profile?.email as string))
-          .limit(1);
 
-        if (existingUser.length === 0) {
-          await db.insert(UserTable).values({
-            name: profile?.name as string,
-            email: profile?.email as string,
-            provider: "google",
-            role: "patient", // Set default role for Google sign-ins
-          });
-        }
-      }
-      return true;
-    },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
         token.role = user.role;
         token.id = Number(user.id);
       }
-      if (account?.provider === "google") {
-        const users = await db
-          .select()
-          .from(UserTable)
-          .where(eq(UserTable.email, token.email as string))
-          .limit(1);
-        if (users.length) {
-          token.role = users[0].role;
-          token.id = users[0].id;
-        }
-      }
+
       return token;
     },
     async session({ session, token }) {
