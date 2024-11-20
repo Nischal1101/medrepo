@@ -29,7 +29,6 @@ export const UserTable = pgTable("users", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
-  provider: varchar("provider", { length: 255 }).notNull(),
   password: text("password"),
   role: userRoleEnum("role").notNull().default("patient"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
