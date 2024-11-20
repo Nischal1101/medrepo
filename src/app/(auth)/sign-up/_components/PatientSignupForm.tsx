@@ -20,13 +20,15 @@ import { cn } from "@/lib/utils";
 import { patientSignUpSchema } from "@/validators/PatientSignUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { CalendarIcon, LockKeyhole, Mail, Phone } from "lucide-react";
+import { CalendarIcon, Contact, LockKeyhole, Mail, Phone } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 export default function PatientSignupForm() {
+  const [pending, setPending] = useState(false);
   const router = useRouter();
   type Schema = z.infer<typeof patientSignUpSchema>;
   const form = useForm<Schema>({
@@ -34,18 +36,22 @@ export default function PatientSignupForm() {
       email: "",
       password: "",
       phone: "",
+      name: "",
     },
     resolver: zodResolver(patientSignUpSchema),
   });
   const onSubmit = async (data: Schema) => {
     try {
+      setPending(true);
+      const toastId = toast.loading("Signing up...");
       const error = await credentialsPatientSignUp(data);
+      setPending(false);
       if (error) {
-        toast.error(String(error));
+        toast.error(String(error.error), { id: toastId });
       } else {
-        toast.success("user logged in Successfully!");
+        toast.success("User registered Successfully!", { id: toastId });
+        router.push("/sign-in");
       }
-      router.refresh();
     } catch (err: unknown) {
       toast.error("something went wrong" + err);
     }
@@ -53,6 +59,29 @@ export default function PatientSignupForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem className="mt-2 grid">
+              <FormControl>
+                <div className="relative flex flex-col items-center justify-center">
+                  <Contact
+                    className="absolute left-2 top-[0.65rem] "
+                    size={15}
+                  />
+                  <Input
+                    placeholder="Enter your fullname"
+                    id="name"
+                    {...field}
+                    className={`w-full max-w-xs px-8 transition delay-150 ease-in-out hover:border-gray-500 `}
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"
@@ -87,7 +116,7 @@ export default function PatientSignupForm() {
                   <Input
                     type="password"
                     {...field}
-                    placeholder=" Your Password"
+                    placeholder="Enter Password"
                     id="password"
                     className={` w-full max-w-xs px-8 transition delay-150 ease-in-out hover:border-gray-500 `}
                   />
@@ -107,7 +136,7 @@ export default function PatientSignupForm() {
                   <Phone className="absolute left-2 top-[0.65rem]" size={15} />
                   <Input
                     {...field}
-                    placeholder=" Your Phone number"
+                    placeholder="Your Phone number"
                     id="phone"
                     className={` w-full max-w-xs px-8 transition delay-150 ease-in-out hover:border-gray-500`}
                   />
@@ -157,7 +186,7 @@ export default function PatientSignupForm() {
             </FormItem>
           )}
         />
-        <AuthBtn title={"Log In"} />
+        <AuthBtn title={"Sign Up"} className="mt-6" pending={pending} />
       </form>
     </Form>
   );

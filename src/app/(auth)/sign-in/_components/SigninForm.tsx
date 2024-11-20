@@ -13,11 +13,13 @@ import { loginSchema } from "@/validators/LoginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LockKeyhole, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 export default function SignInForm() {
+  const [pending, setPending] = useState(false);
   const router = useRouter();
   type Schema = z.infer<typeof loginSchema>;
   const form = useForm<Schema>({
@@ -29,15 +31,18 @@ export default function SignInForm() {
   });
   const onSubmit = async (data: Schema) => {
     try {
+      setPending(true);
+      const toastId = toast.loading("Logging in");
       const error = await credentialsSignIn(data);
-      if (error) {
-        toast.error(String(error));
+      setPending(false);
+      if (error?.error) {
+        toast.error(String(error.error), { id: toastId });
       } else {
-        toast.success("User logged in Successfully!");
+        toast.success("User logged in Successfully!", { id: toastId });
       }
-      router.refresh();
+      router.push("/");
     } catch (err: unknown) {
-      toast.error("Something went wrong" + err);
+      toast.error(String("here" + err));
     }
   };
   return (
@@ -88,7 +93,7 @@ export default function SignInForm() {
           )}
         />
 
-        <AuthBtn title={"Log In"} className="mt-6" />
+        <AuthBtn title={"Log In"} className="mt-6" pending={pending} />
       </form>
     </Form>
   );
