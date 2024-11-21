@@ -1,7 +1,8 @@
 "use server";
+import { DoctorSpecialization } from "@/constants";
 import { signIn } from "@/lib/auth";
 import db from "@/lib/db/db";
-import { PatientTable, UserTable } from "@/lib/db/Schema";
+import { DoctorTable, PatientTable, UserTable } from "@/lib/db/Schema";
 import { eq } from "drizzle-orm";
 import { AuthError } from "next-auth";
 export const credentialsSignIn = async ({
@@ -65,6 +66,50 @@ export const credentialsPatientSignUp = async ({
       await db
         .insert(PatientTable)
         .values({ dob: dob.toISOString(), phone, userId: user[0].id });
+    } catch (error) {
+      return { error };
+    }
+  } catch (error: unknown) {
+    return {
+      error:
+        "Something went wrong. " +
+        (error instanceof Error ? error.message : String(error)),
+    };
+  }
+};
+export const credentialsDoctorSignUp = async ({
+  email,
+  password,
+  name,
+  specialization,
+}: {
+  name: string;
+  email: string;
+  password: string;
+  specialization: (typeof DoctorSpecialization)[number];
+}) => {
+  try {
+    if (!email || !password || !specialization || !name) {
+      return { error: "Invalid Credentials" };
+    }
+
+    const exists = await db
+      .select()
+      .from(UserTable)
+      .where(eq(UserTable.email, email));
+    if (exists.length > 0) {
+      return { error: "Email already exists, please login." };
+    }
+
+    const user = await db
+      .insert(UserTable)
+      .values({ name, email, password })
+      .returning();
+
+    try {
+      await db
+        .insert(DoctorTable)
+        .values({ specialization, userId: user[0].id });
     } catch (error) {
       return { error };
     }
