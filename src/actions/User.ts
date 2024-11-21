@@ -61,10 +61,18 @@ export const credentialsPatientSignUp = async ({
       .insert(UserTable)
       .values({ name, email, password })
       .returning();
-    await db.insert(PatientTable).values({ dob: dob.toISOString(), phone, userId: user[0].id });
+    try {
+      await db
+        .insert(PatientTable)
+        .values({ dob: dob.toISOString(), phone, userId: user[0].id });
+    } catch (error) {
+      return { error };
+    }
   } catch (error: unknown) {
     return {
-      error: "Something went wrong. " + (error instanceof Error ? error.message : String(error)),
+      error:
+        "Something went wrong. " +
+        (error instanceof Error ? error.message : String(error)),
     };
   }
 };
