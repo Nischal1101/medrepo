@@ -32,15 +32,15 @@ export default function SignInForm() {
   const onSubmit = async (data: Schema) => {
     try {
       setPending(true);
-      const toastId = toast.loading("Logging in");
+
       const error = await credentialsSignIn(data);
       setPending(false);
       if (error?.error) {
-        toast.error(String(error.error), { id: toastId });
+        toast.error(String(error.error));
       } else {
-        toast.success("User logged in Successfully!", { id: toastId });
+        toast.success("User logged in Successfully!");
+        router.push("/");
       }
-      router.push("/");
     } catch (err: unknown) {
       toast.error(String("here" + err));
     }
