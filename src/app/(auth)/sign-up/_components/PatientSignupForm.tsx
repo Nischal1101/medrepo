@@ -43,13 +43,12 @@ export default function PatientSignupForm() {
   const onSubmit = async (data: Schema) => {
     try {
       setPending(true);
-      const toastId = toast.loading("Signing up...");
       const error = await credentialsPatientSignUp(data);
       setPending(false);
       if (error) {
-        toast.error(String(error.error), { id: toastId });
+        toast.error(String(error.error));
       } else {
-        toast.success("User registered Successfully!", { id: toastId });
+        toast.success("User registered Successfully!");
         router.push("/sign-in");
       }
     } catch (err: unknown) {
