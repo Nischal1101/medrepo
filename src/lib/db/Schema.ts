@@ -47,11 +47,12 @@ export const HospitalTable = pgTable("hospitals", {
 
 export const DoctorTable = pgTable("doctors", {
   id: serial("id").primaryKey(),
-  specialization: varchar("specialization", { length: 100 }),
+  specialization: varchar("specialization", { length: 100 }).notNull(),
   userId: integer("user_id")
     .notNull()
     .unique()
     .references(() => UserTable.id),
+  isVerified: boolean("is_verified").default(false),
 });
 
 export const PatientTable = pgTable("patients", {
@@ -131,8 +132,6 @@ export const hospitalPatients = pgTable(
     pk: primaryKey({ columns: [table.hospitalId, table.patientId] }),
   })
 );
-
-
 
 // Simple table for doctor access to reports
 export const ReportDoctorAccess = pgTable(
