@@ -11,5 +11,7 @@ export const doctorSignUpSchema = z.object({
     .string({ required_error: "name is a required field" })
     .min(3, { message: "name must be at least 3 characters long" })
     .max(20, { message: "name can't be more than 20 characters long" }),
-  specialization: z.enum(DoctorSpecialization),
+  specialization: z.enum(DoctorSpecialization, {
+    required_error: "specialization is a required field",
+  }),
 });
