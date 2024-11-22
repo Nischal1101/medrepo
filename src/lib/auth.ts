@@ -38,6 +38,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!match) {
           throw new CredentialsSignin({ cause: "Incorrect email or password" });
         }
+        if (!user.isVerified) {
+          throw new CredentialsSignin({ cause: "Your email isn't verified." });
+        }
         return {
           id: user.id,
           name: user.name,
@@ -65,7 +68,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       if (session.user) {
         session.user.role = token.role as string;
-        session.user.id = token.id;
+        // session.user.id = token.id;
       }
 
       return session;
