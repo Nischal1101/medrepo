@@ -1,1 +1,0 @@
-ALTER TABLE "doctors" ALTER COLUMN "specialization" SET DATA TYPE varchar(100);

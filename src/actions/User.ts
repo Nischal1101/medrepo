@@ -60,7 +60,7 @@ export const credentialsPatientSignUp = async ({
     }
     const user = await db
       .insert(UserTable)
-      .values({ name, email, password })
+      .values({ name, email, password, isVerified: true })
       .returning();
     try {
       await db

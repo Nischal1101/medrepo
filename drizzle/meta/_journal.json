@@ -5,50 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1729350803228,
-      "tag": "0000_minor_virginia_dare",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1729390396568,
-      "tag": "0001_sparkling_pepper_potts",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1729390483159,
-      "tag": "0002_flimsy_garia",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1730600148116,
-      "tag": "0003_cute_namor",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1732071242015,
-      "tag": "0004_legal_starfox",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1732184322118,
-      "tag": "0005_white_photon",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1732186463435,
-      "tag": "0006_luxuriant_runaways",
+      "when": 1732242158437,
+      "tag": "0000_amused_warhawk",
       "breakpoints": true
     }
   ]

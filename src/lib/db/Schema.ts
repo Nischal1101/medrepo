@@ -31,6 +31,7 @@ export const UserTable = pgTable("users", {
   email: varchar("email", { length: 255 }).notNull().unique(),
   password: text("password"),
   role: userRoleEnum("role").notNull().default("patient"),
+  isVerified: boolean("is_verified").default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -52,7 +53,6 @@ export const DoctorTable = pgTable("doctors", {
     .notNull()
     .unique()
     .references(() => UserTable.id),
-  isVerified: boolean("is_verified").default(false),
 });
 
 export const PatientTable = pgTable("patients", {
