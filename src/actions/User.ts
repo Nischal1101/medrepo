@@ -103,7 +103,7 @@ export const credentialsDoctorSignUp = async ({
 
     const user = await db
       .insert(UserTable)
-      .values({ name, email, password })
+      .values({ name, email, password, role: "doctor" })
       .returning();
 
     try {
