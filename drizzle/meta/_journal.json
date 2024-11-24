@@ -8,6 +8,41 @@
       "when": 1732242158437,
       "tag": "0000_amused_warhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1732419497057,
+      "tag": "0001_tricky_moon_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1732419672477,
+      "tag": "0002_noisy_matthew_murdock",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1732419815033,
+      "tag": "0003_brown_valkyrie",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1732419981239,
+      "tag": "0004_quiet_iron_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1732439431431,
+      "tag": "0005_fearless_nekra",
+      "breakpoints": true
     }
   ]
 }

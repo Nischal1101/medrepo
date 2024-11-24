@@ -38,6 +38,7 @@ export const UserTable = pgTable("users", {
 
 export const HospitalTable = pgTable("hospitals", {
   id: serial("id").primaryKey(),
+  hospitalName: varchar("hospital_name", { length: 255 }),
   address: varchar("address", { length: 255 }),
   phone: varchar("phone", { length: 20 }),
   userId: integer("user_id")

@@ -3,6 +3,7 @@ import PatientTable from "@/components/PatientTable";
 import PatientTableSkeleton from "@/components/PatientTableSkeleton";
 
 import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 import { Suspense } from "react";
 
@@ -11,6 +12,7 @@ const ReportsPage = async () => {
   const userid = session?.user.id;
   console.log("The userId from patient page is", userid);
   if (!session?.user.id) {
+    redirect("/sign-up");
     return <div>No user session</div>;
   }
 
