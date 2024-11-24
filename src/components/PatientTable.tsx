@@ -14,7 +14,7 @@ const PatientTable = async ({ userid }: { userid: number }) => {
   const data = await fetchUserReport(userid);
   if (data.length === 0) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-3xl">
+      <div className="flex min-h-[65vh] items-center justify-center text-2xl">
         No data found
       </div>
     );

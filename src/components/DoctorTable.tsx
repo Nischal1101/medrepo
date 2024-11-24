@@ -15,7 +15,7 @@ const DoctorTable = async ({ userid }: { userid: number }) => {
   console.log("The doctor array is", data);
   if (data.length === 0) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-3xl">
+      <div className="flex min-h-[65vh] items-center justify-center text-2xl">
         No data found
       </div>
     );
