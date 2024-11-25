@@ -14,4 +14,7 @@ export const doctorSignUpSchema = z.object({
   specialization: z.enum(DoctorSpecialization, {
     required_error: "specialization is a required field",
   }),
+  id: z.string({
+    required_error: "Hospital id is a required field",
+  }),
 });
