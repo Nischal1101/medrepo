@@ -26,7 +26,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-export default function DoctorSignupForm() {
+export default function DoctorSignupForm({
+  hospitals,
+}: {
+  hospitals: {
+    id: number;
+    name: string | null;
+  }[];
+}) {
   const [pending, setPending] = useState(false);
   const router = useRouter();
   type Schema = z.infer<typeof doctorSignUpSchema>;
@@ -138,6 +145,29 @@ export default function DoctorSignupForm() {
                   {DoctorSpecialization.map((ele, index) => (
                     <SelectItem value={ele} key={index}>
                       {ele}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="id"
+          render={({ field }) => (
+            <FormItem className="mt-2">
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your hospital." />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {hospitals.map((ele, index) => (
+                    <SelectItem value={String(ele.id)} key={index}>
+                      {ele.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
