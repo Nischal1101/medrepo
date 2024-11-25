@@ -1,19 +1,17 @@
 import db from "@/lib/db/db";
-import { UserTable } from "@/lib/db/Schema";
-import { eq } from "drizzle-orm";
+import { HospitalTable } from "@/lib/db/Schema";
 
 export async function getHospitalNames() {
   let hospitals;
   try {
     hospitals = await db
-      .select({ name: UserTable.name })
-      .from(UserTable)
-      .where(eq(UserTable.role, "hospital"));
+      .select({ id: HospitalTable.id, name: HospitalTable.hospitalName })
+      .from(HospitalTable);
   } catch (error) {
     console.log(error);
   }
   if (hospitals && hospitals.length === 0) {
-    return [{ name: "Nobel" }];
+    return [{ id: 999, name: "Nobel" }];
   } else {
     return hospitals;
   }
