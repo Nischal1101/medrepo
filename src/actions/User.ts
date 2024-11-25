@@ -1,8 +1,14 @@
+/* eslint-disable camelcase */
 "use server";
 import { DoctorSpecialization } from "@/constants";
 import { signIn } from "@/lib/auth";
 import db from "@/lib/db/db";
-import { DoctorTable, PatientTable, UserTable } from "@/lib/db/Schema";
+import {
+  DoctorTable,
+  HospitalDoctorsTable,
+  PatientTable,
+  UserTable
+} from "@/lib/db/Schema";
 import { eq } from "drizzle-orm";
 import { AuthError } from "next-auth";
 export const credentialsSignIn = async ({
@@ -82,14 +88,16 @@ export const credentialsDoctorSignUp = async ({
   password,
   name,
   specialization,
+  id,
 }: {
   name: string;
   email: string;
   password: string;
   specialization: (typeof DoctorSpecialization)[number];
+  id: string;
 }) => {
   try {
-    if (!email || !password || !specialization || !name) {
+    if (!email || !password || !specialization || !name || !id) {
       return { error: "Invalid Credentials" };
     }
 
@@ -107,9 +115,14 @@ export const credentialsDoctorSignUp = async ({
       .returning();
 
     try {
-      await db
+      const doctors = await db
         .insert(DoctorTable)
-        .values({ specialization, userId: user[0].id });
+        .values({ specialization, userId: user[0].id })
+        .returning();
+      const doctor = doctors[0];
+      await db
+        .insert(HospitalDoctorsTable)
+        .values({ doctorId: doctor.id, hospitalId: Number(id) });
     } catch (error) {
       return { error };
     }
