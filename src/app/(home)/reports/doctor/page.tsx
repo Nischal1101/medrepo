@@ -9,7 +9,7 @@ import { Suspense } from "react";
 const ReportsPage = async () => {
   const session = await auth();
 
-  const userid = session?.user.id as number;
+  const userid = Number(session?.user.id);
 
   return (
     <MaxWidthWrapper>

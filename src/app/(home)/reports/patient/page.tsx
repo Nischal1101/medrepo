@@ -9,7 +9,7 @@ import { Suspense } from "react";
 
 const ReportsPage = async () => {
   const session = await auth();
-  const userid = session?.user.id;
+  const userid = Number(session?.user.id);
   console.log("The userId from patient page is", userid);
   if (!session?.user.id) {
     redirect("/sign-up");
