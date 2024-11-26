@@ -29,11 +29,12 @@ export const credentialsSignIn = async ({
       switch (error.type) {
         case "CredentialsSignin":
           return {
-            error: error.cause,
+            error: error.cause+
+            "here",
           };
         default:
           return {
-            error: error.message,
+            error: error.message+"there",
           };
       }
     }
