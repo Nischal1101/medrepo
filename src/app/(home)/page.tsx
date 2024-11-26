@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 
 const Home = async () => {
   const session = await auth();
+
   if (session && session.user.role === "hospital") {
     redirect("/upload-report");
   } else if (session && session.user.role === "doctor") {
