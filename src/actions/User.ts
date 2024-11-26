@@ -7,7 +7,7 @@ import {
   DoctorTable,
   HospitalDoctorsTable,
   PatientTable,
-  UserTable
+  UserTable,
 } from "@/lib/db/Schema";
 import { eq } from "drizzle-orm";
 import { AuthError } from "next-auth";
@@ -29,12 +29,11 @@ export const credentialsSignIn = async ({
       switch (error.type) {
         case "CredentialsSignin":
           return {
-            error: error.cause+
-            "here",
+            error: error.cause + "here",
           };
         default:
           return {
-            error: error.message+"there",
+            error: error.cause + "there",
           };
       }
     }
