@@ -33,7 +33,7 @@ export const credentialsSignIn = async ({
           };
         default:
           return {
-            error: error.cause + "there",
+            error: error.cause?.err + "there",
           };
       }
     }
