@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import DownloadButton from "./DownloadButton";
 import {
@@ -8,17 +9,9 @@ import {
   TableBody,
   TableCell,
 } from "./ui/table";
-import { fetchUserReport } from "@/utils/FetchReports";
+import { FetchReportsReturnType } from "@/utils/FetchReports";
 
-const PatientTable = async ({ userid }: { userid: number }) => {
-  const data = await fetchUserReport(userid);
-  if (data.length === 0) {
-    return (
-      <div className="flex min-h-[65vh] items-center justify-center text-2xl">
-        No data found
-      </div>
-    );
-  }
+const PatientTable = async ({ data }: { data: FetchReportsReturnType }) => {
   return (
     <Table className="mt-12">
       <TableHeader className="md:text-lg">
