@@ -50,6 +50,7 @@ export const HospitalTable = pgTable("hospitals", {
 export const DoctorTable = pgTable("doctors", {
   id: serial("id").primaryKey(),
   specialization: varchar("specialization", { length: 100 }).notNull(),
+  doctorName: varchar("doctor_name", { length: 255 }),
   userId: integer("user_id")
     .notNull()
     .unique()
@@ -58,6 +59,7 @@ export const DoctorTable = pgTable("doctors", {
 
 export const PatientTable = pgTable("patients", {
   id: serial("id").primaryKey(),
+  patientName: varchar("patient_name", { length: 255 }),
   dob: date("date_of_birth"),
   phone: varchar("phone", { length: 20 }),
   userId: integer("user_id")
