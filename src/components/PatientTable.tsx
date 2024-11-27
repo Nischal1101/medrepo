@@ -9,9 +9,17 @@ import {
   TableBody,
   TableCell,
 } from "./ui/table";
-import { FetchReportsReturnType } from "@/utils/FetchReports";
+import { fetchUserReport } from "@/utils/FetchReports";
 
-const PatientTable = async ({ data }: { data: FetchReportsReturnType }) => {
+const PatientTable = async ({ userid }: { userid: number }) => {
+  const data = await fetchUserReport(userid);
+  if (data.length === 0) {
+    return (
+      <div className="flex min-h-[65vh] items-center justify-center text-2xl">
+        No data found
+      </div>
+    );
+  }
   return (
     <Table className="mt-12">
       <TableHeader className="md:text-lg">
