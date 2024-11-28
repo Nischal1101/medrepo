@@ -10,6 +10,7 @@ import {
   TableCell,
 } from "./ui/table";
 import { fetchUserReport } from "@/utils/FetchReports";
+import Link from "next/link";
 
 const PatientTable = async ({ userid }: { userid: number }) => {
   const data = await fetchUserReport(userid);
@@ -34,7 +35,9 @@ const PatientTable = async ({ userid }: { userid: number }) => {
       <TableBody>
         {data.map((item) => (
           <TableRow className="md:text-lg" key={item.id}>
-            <TableCell className="font-medium ">{item.id}</TableCell>
+            <TableCell className="font-medium ">
+              <Link href={`/reports/patient/access/${item.id}`}>{item.id}</Link>
+            </TableCell>
             <TableCell>{item.hospitalName}</TableCell>
             <TableCell>{item.doctorName}</TableCell>
             <TableCell>{item.createdAt.toLocaleDateString()}</TableCell>
