@@ -3,7 +3,7 @@ import {
   DoctorTable,
   HospitalTable,
   ReportDoctorAccess,
-  ReportsTable
+  ReportsTable,
 } from "@/lib/db/Schema";
 import { and, eq } from "drizzle-orm";
 
@@ -52,50 +52,4 @@ export async function getReportWithAccess(reportId: number) {
     report: report[0],
     doctorAccess,
   };
-}
-
-export async function updateDoctorAccess({
-  reportId,
-  doctorId,
-  canAccess,
-  grantedByDoctorId,
-}: {
-  reportId: number;
-  doctorId: number;
-  canAccess: boolean;
-  grantedByDoctorId: number;
-}) {
-  // Check if access record exists
-  const existingAccess = await db
-    .select()
-    .from(ReportDoctorAccess)
-    .where(
-      and(
-        eq(ReportDoctorAccess.reportId, reportId),
-        eq(ReportDoctorAccess.doctorId, doctorId)
-      )
-    )
-    .limit(1);
-
-  if (existingAccess.length > 0) {
-    // Update existing access
-    return db
-      .update(ReportDoctorAccess)
-      .set({ canAccess, grantedAt: new Date() })
-      .where(
-        and(
-          eq(ReportDoctorAccess.reportId, reportId),
-          eq(ReportDoctorAccess.doctorId, doctorId)
-        )
-      );
-  } else {
-    // Insert new access record
-    return db.insert(ReportDoctorAccess).values({
-      reportId,
-      doctorId,
-      canAccess,
-      grantedByDoctorId,
-      grantedAt: new Date(),
-    });
-  }
 }
