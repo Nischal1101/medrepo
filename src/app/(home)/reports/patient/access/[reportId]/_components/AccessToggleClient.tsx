@@ -3,8 +3,8 @@
 import { updateDoctorAccess } from "@/actions/User";
 import { Switch } from "@/components/ui/switch";
 import { LockIcon } from "lucide-react";
-import React, { useTransition } from "react";
-import { useFormState } from "react-dom";
+import React, { useTransition, useActionState } from "react";
+
 import { toast } from "sonner";
 
 function AccessToggleClient({
@@ -22,7 +22,7 @@ function AccessToggleClient({
   isCreator: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
-  const [state, formAction] = useFormState(updateDoctorAccess, null);
+  const [state, formAction] = useActionState(updateDoctorAccess, null);
 
   React.useEffect(() => {
     if (state?.error) {
