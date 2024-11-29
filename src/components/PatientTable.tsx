@@ -25,6 +25,7 @@ const PatientTable = async ({ userid }: { userid: number }) => {
     <Table className="mt-12">
       <TableHeader className="md:text-lg">
         <TableRow>
+          <TableHead className=" invisible max-w-px">Id</TableHead>
           <TableHead className="max-w-[100px]">Id</TableHead>
           <TableHead>Hospital</TableHead>
           <TableHead>Doctor</TableHead>
@@ -34,15 +35,23 @@ const PatientTable = async ({ userid }: { userid: number }) => {
       </TableHeader>
       <TableBody>
         {data.map((item) => (
-          <TableRow className="md:text-lg" key={item.id}>
-            <TableCell className="font-medium ">
-              <Link href={`/reports/patient/access/${item.id}`}>{item.id}</Link>
-            </TableCell>
+          <TableRow key={item.id} className="group relative md:text-lg">
+            {/* Clickable overlay */}
+            <Link
+              href={`/reports/patient/access/${item.id}`}
+              className="absolute inset-0 z-10 group-hover:bg-muted/50"
+            >
+              <span className="sr-only hidden">View report details</span>
+            </Link>
+            <TableCell className="font-medium">{item.id}</TableCell>
             <TableCell>{item.hospitalName}</TableCell>
             <TableCell>{item.doctorName}</TableCell>
             <TableCell>{item.createdAt.toLocaleDateString()}</TableCell>
             <TableCell className="text-right">
-              <DownloadButton url={item.attachmentUrl as string} />
+              {/* Prevent the download button from triggering row click */}
+              <div className="relative z-20">
+                <DownloadButton url={item.attachmentUrl as string} />
+              </div>
             </TableCell>
           </TableRow>
         ))}
