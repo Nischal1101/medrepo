@@ -26,16 +26,16 @@ const AccessPage = async ({
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <CardTitle className="flex items-center gap-2 text-xl">
-                <FileText className="size-5" />
+                <FileText className="size-5 text-primary" />
                 {report.title}
               </CardTitle>
               <CardDescription>
                 <p className="flex items-center gap-2">
-                  <Hospital className="size-4" />
+                  <Hospital className="size-4 text-primary" />
                   {report.hospital?.name}
                 </p>
                 <p className="flex items-center gap-2">
-                  <User className="size-4" />
+                  <User className="size-4 text-primary" />
                   Created by {report.createdByDoctor?.name}
                 </p>
               </CardDescription>
