@@ -1,16 +1,19 @@
 /* eslint-disable camelcase */
 "use server";
 import { DoctorSpecialization } from "@/constants";
-import { signIn } from "@/lib/auth";
+import { auth, signIn } from "@/lib/auth";
 import db from "@/lib/db/db";
 import {
   DoctorTable,
   HospitalDoctorsTable,
   PatientTable,
+  ReportDoctorAccess,
+  ReportsTable,
   UserTable,
 } from "@/lib/db/Schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { AuthError } from "next-auth";
+import { revalidatePath } from "next/cache";
 export const credentialsSignIn = async ({
   email,
   password,
@@ -134,3 +137,120 @@ export const credentialsDoctorSignUp = async ({
     };
   }
 };
+
+async function verifyReportOwnership(reportId: number, userId: number) {
+  const report = await db
+    .select({
+      patientId: ReportsTable.patientId,
+      patient: {
+        userId: PatientTable.userId,
+      },
+    })
+    .from(ReportsTable)
+    .leftJoin(PatientTable, eq(ReportsTable.patientId, PatientTable.id))
+    .where(eq(ReportsTable.id, reportId))
+    .limit(1);
+
+  return report[0]?.patient?.userId === userId;
+}
+
+// Check if the doctor is the report creator
+async function isReportCreator(reportId: number, doctorId: number) {
+  const report = await db
+    .select({
+      createdByDoctorId: ReportsTable.createdByDoctorId,
+    })
+    .from(ReportsTable)
+    .where(eq(ReportsTable.id, reportId))
+    .limit(1);
+
+  return report[0]?.createdByDoctorId === doctorId;
+}
+
+export async function updateDoctorAccess(
+  prevState: unknown,
+  formData: FormData
+) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return { error: "Unauthorized" };
+    }
+
+    const reportId = parseInt(formData.get("reportId") as string);
+    const doctorId = parseInt(formData.get("doctorId") as string);
+    const canAccess = formData.get("canAccess") === "true";
+
+    // Verify the user owns this report
+    const hasAccess = await verifyReportOwnership(
+      reportId,
+      Number(session.user.id)
+    );
+    if (!hasAccess) {
+      return { error: "Unauthorized access to this report" };
+    }
+
+    // Check if trying to modify creator's access
+    const isCreator = await isReportCreator(reportId, doctorId);
+    if (isCreator) {
+      return { error: "Cannot modify access for the report creator" };
+    }
+
+    // Get the original doctor who created the report to use as grantedByDoctorId
+    const report = await db
+      .select({
+        createdByDoctorId: ReportsTable.createdByDoctorId,
+      })
+      .from(ReportsTable)
+      .where(eq(ReportsTable.id, reportId))
+      .limit(1);
+
+    if (!report[0]?.createdByDoctorId) {
+      return { error: "Could not find report creator" };
+    }
+
+    // Check if access record exists
+    const existingAccess = await db
+      .select()
+      .from(ReportDoctorAccess)
+      .where(
+        and(
+          eq(ReportDoctorAccess.reportId, reportId),
+          eq(ReportDoctorAccess.doctorId, doctorId)
+        )
+      )
+      .limit(1);
+
+    if (existingAccess.length > 0) {
+      // Update existing access
+      await db
+        .update(ReportDoctorAccess)
+        .set({
+          canAccess,
+          grantedAt: new Date(),
+          grantedByDoctorId: report[0].createdByDoctorId,
+        })
+        .where(
+          and(
+            eq(ReportDoctorAccess.reportId, reportId),
+            eq(ReportDoctorAccess.doctorId, doctorId)
+          )
+        );
+    } else {
+      // Insert new access record
+      await db.insert(ReportDoctorAccess).values({
+        reportId,
+        doctorId,
+        canAccess,
+        grantedByDoctorId: report[0].createdByDoctorId,
+        grantedAt: new Date(),
+      });
+    }
+
+    revalidatePath(`/reports/${reportId}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to update report access:", error);
+    return { error: "Failed to update access" };
+  }
+}
