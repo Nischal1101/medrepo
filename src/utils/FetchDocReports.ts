@@ -1,113 +1,76 @@
-import { aliasedTable, and, eq, or } from "drizzle-orm";
+import db from "@/lib/db/db";
 import {
-  ReportsTable,
-  ReportDoctorAccess,
-  PatientTable,
-  UserTable,
   DoctorTable,
   HospitalTable,
+  PatientTable,
+  ReportDoctorAccess,
+  ReportsTable,
 } from "@/lib/db/Schema";
-import db from "@/lib/db/db";
+import { and, desc, eq, or } from "drizzle-orm";
 
-// Function to get all accessible reports with detailed information
-// export const getAllAccessibleReportsWithDetails = async ({
-//   doctorId,
-// }: {
-//   doctorId: number;
-// }) => {
-//   const hospitalUser = aliasedTable(UserTable, "hospitalUser");
-//   const doctorUser = aliasedTable(UserTable, "doctorUser");
-//   return await db
-//     .select({
-//       // Report core details
-//       reportId: ReportsTable.id,
-//       title: ReportsTable.title,
-//       reportType: ReportsTable.reportType,
-//       attachmentUrl: ReportsTable.attachmentUrl,
-//       createdAt: ReportsTable.createdAt,
+export async function getAccessibleReportsByUserId(userId: number) {
+  try {
+    // First, get the doctor record using userId
+    const doctorRecord = await db
+      .select({
+        doctorId: DoctorTable.id,
+      })
+      .from(DoctorTable)
+      .where(eq(DoctorTable.userId, userId))
+      .limit(1);
 
-//       // Patient details
-//       patientName: UserTable.name,
+    if (!doctorRecord.length) {
+      throw new Error("Doctor record not found for this user");
+    }
 
-//       // Creating Doctor details
-//       creatingDoctorName: doctorUser.name,
+    const doctorId = doctorRecord[0].doctorId;
 
-//       // Hospital details
-//       hospitalName: hospitalUser.name,
-//     })
-//     .from(ReportsTable)
-//     // Join for report access
-//     .innerJoin(
-//       ReportDoctorAccess,
-//       and(
-//         eq(ReportDoctorAccess.reportId, ReportsTable.id),
-//         eq(ReportDoctorAccess.doctorId, doctorId),
-//         eq(ReportDoctorAccess.canAccess, true)
-//       )
-//     )
-//     // Joins for patient info
-//     .innerJoin(PatientTable, eq(ReportsTable.patientId, PatientTable.id))
-//     .innerJoin(UserTable, eq(PatientTable.userId, UserTable.id))
-//     // Joins for doctor info
-//     .innerJoin(DoctorTable, eq(ReportsTable.createdByDoctorId, DoctorTable.id))
-//     .innerJoin(doctorUser, eq(DoctorTable.userId, doctorUser.id))
-//     // Joins for hospital info
-//     .innerJoin(HospitalTable, eq(ReportsTable.hospitalId, HospitalTable.id))
-//     .innerJoin(hospitalUser, eq(HospitalTable.userId, hospitalUser.id))
-//     .where(
-//       or(
-//         eq(ReportsTable.createdByDoctorId, doctorId),
-//         eq(ReportDoctorAccess.canAccess, true)
-//       )
-//     )
-//     .orderBy(ReportsTable.createdAt);
-// };
-
-export const getAllAccessibleReportsWithDetails = async ({
-  doctorId,
-}: {
-  doctorId: number;
-}) => {
-  const hospitalUser = aliasedTable(UserTable, "hospitalUser");
-  const doctorUser = aliasedTable(UserTable, "doctorUser");
-
-  return await db
-    .select({
-      reportId: ReportsTable.id,
-      title: ReportsTable.title,
-      reportType: ReportsTable.reportType,
-      attachmentUrl: ReportsTable.attachmentUrl,
-      createdAt: ReportsTable.createdAt,
-      patientName: UserTable.name,
-      creatingDoctorName: doctorUser.name,
-      hospitalName: hospitalUser.name,
-    })
-    .from(ReportsTable)
-    // Joins for patient info
-    .innerJoin(PatientTable, eq(ReportsTable.patientId, PatientTable.id))
-    .innerJoin(UserTable, eq(PatientTable.userId, UserTable.id))
-    // Joins for doctor info
-    .innerJoin(DoctorTable, eq(ReportsTable.createdByDoctorId, DoctorTable.id))
-    .innerJoin(doctorUser, eq(DoctorTable.userId, doctorUser.id))
-    // Joins for hospital info
-    .innerJoin(HospitalTable, eq(ReportsTable.hospitalId, HospitalTable.id))
-    .innerJoin(hospitalUser, eq(HospitalTable.userId, hospitalUser.id))
-    // Left join for access checking
-    .leftJoin(
-      ReportDoctorAccess,
-      and(
-        eq(ReportDoctorAccess.reportId, ReportsTable.id),
-        eq(ReportDoctorAccess.doctorId, doctorId)
-      )
-    )
-    .where(
-      or(
-        eq(ReportsTable.createdByDoctorId, doctorId),
+    // Get all reports that the doctor can access
+    const reports = await db
+      .select({
+        reportId: ReportsTable.id,
+        title: ReportsTable.title,
+        reportType: ReportsTable.reportType,
+        attachmentUrl: ReportsTable.attachmentUrl,
+        createdAt: ReportsTable.createdAt,
+        // Patient details
+        patientName: PatientTable.patientName,
+        // Creating doctor details
+        creatingDoctorName: DoctorTable.doctorName,
+        // Hospital details
+        hospitalName: HospitalTable.hospitalName,
+      })
+      .from(ReportsTable)
+      // Join with PatientTable for patient details
+      .leftJoin(PatientTable, eq(ReportsTable.patientId, PatientTable.id))
+      // Join with DoctorTable for creating doctor details
+      .leftJoin(DoctorTable, eq(ReportsTable.createdByDoctorId, DoctorTable.id))
+      // Join with HospitalTable for hospital details
+      .leftJoin(HospitalTable, eq(ReportsTable.hospitalId, HospitalTable.id))
+      // Join with ReportDoctorAccess to check access
+      .leftJoin(
+        ReportDoctorAccess,
         and(
-          eq(ReportDoctorAccess.doctorId, doctorId),
-          eq(ReportDoctorAccess.canAccess, true)
+          eq(ReportsTable.id, ReportDoctorAccess.reportId),
+          eq(ReportDoctorAccess.doctorId, doctorId)
         )
       )
-    )
-    .orderBy(ReportsTable.createdAt);
-};
+      .where(
+        or(
+          // Reports created by the doctor
+          eq(ReportsTable.createdByDoctorId, doctorId),
+          // Reports where access has been granted
+          and(
+            eq(ReportDoctorAccess.doctorId, doctorId),
+            eq(ReportDoctorAccess.canAccess, true)
+          )
+        )
+      )
+      .orderBy(desc(ReportsTable.createdAt));
+
+    return reports;
+  } catch (error) {
+    console.error("Error fetching doctor's accessible reports:", error);
+    throw error;
+  }
+}
