@@ -15,7 +15,6 @@ export default async function HospitalPortalPage() {
   const userId = Number(session?.user.id);
 
   const hospitalId = await getHospitalId(userId);
-  console.log("hospitalId", hospitalId);
   if (!hospitalId) {
     throw new Error("no Id ");
   }
