@@ -1,17 +1,17 @@
-import React from "react";
-import MaxWidthWrapper from "../../components/MaxWidthWrapper";
-import { Button } from "@/components/ui/button";
 import Features from "@/components/Features";
 import Showoff from "@/components/Showoff";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import MaxWidthWrapper from "../../components/MaxWidthWrapper";
 
 const Home = async () => {
   const session = await auth();
 
   if (session && session.user.role === "hospital") {
-    redirect("/upload-report");
+   
+    redirect("/hospital");
   } else if (session && session.user.role === "doctor") {
     redirect("reports/doctor");
   }
