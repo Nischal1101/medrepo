@@ -57,7 +57,7 @@ export const credentialsPatientSignUp = async ({
   dob: Date;
 }) => {
   try {
-    if (!email || !password || !phone || !dob) {
+    if (!email || !password || !phone || !dob || !name) {
       return { error: "Invalid Credentials" };
     }
     const exists = await db
@@ -74,7 +74,12 @@ export const credentialsPatientSignUp = async ({
     try {
       await db
         .insert(PatientTable)
-        .values({ dob: dob.toISOString(), phone, userId: user[0].id });
+        .values({
+          dob: dob.toISOString(),
+          phone,
+          userId: user[0].id,
+          patientName: name,
+        });
     } catch (error) {
       return { error };
     }
@@ -120,7 +125,7 @@ export const credentialsDoctorSignUp = async ({
     try {
       const doctors = await db
         .insert(DoctorTable)
-        .values({ specialization, userId: user[0].id })
+        .values({ specialization, userId: user[0].id, doctorName: name })
         .returning();
       const doctor = doctors[0];
       await db
