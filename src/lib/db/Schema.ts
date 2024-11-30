@@ -38,9 +38,9 @@ export const UserTable = pgTable("users", {
 
 export const HospitalTable = pgTable("hospitals", {
   id: serial("id").primaryKey(),
-  hospitalName: varchar("hospital_name", { length: 255 }),
-  address: varchar("address", { length: 255 }),
-  phone: varchar("phone", { length: 20 }),
+  hospitalName: varchar("hospital_name", { length: 255 }).notNull(),
+  address: varchar("address", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
   userId: integer("user_id")
     .notNull()
     .unique()
@@ -50,7 +50,7 @@ export const HospitalTable = pgTable("hospitals", {
 export const DoctorTable = pgTable("doctors", {
   id: serial("id").primaryKey(),
   specialization: varchar("specialization", { length: 100 }).notNull(),
-  doctorName: varchar("doctor_name", { length: 255 }),
+  doctorName: varchar("doctor_name", { length: 255 }).notNull(),
   userId: integer("user_id")
     .notNull()
     .unique()
@@ -59,9 +59,9 @@ export const DoctorTable = pgTable("doctors", {
 
 export const PatientTable = pgTable("patients", {
   id: serial("id").primaryKey(),
-  patientName: varchar("patient_name", { length: 255 }),
+  patientName: varchar("patient_name", { length: 255 }).notNull(),
   dob: date("date_of_birth"),
-  phone: varchar("phone", { length: 20 }),
+  phone: varchar("phone", { length: 20 }).notNull(),
   userId: integer("user_id")
     .notNull()
     .unique()
@@ -81,9 +81,7 @@ export const ReportsTable = pgTable("reports", {
   reportType: reportTypeEnum("report_type").notNull(),
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description").notNull(),
-  findings: text("findings"),
-  recommendations: text("recommendations"),
-  attachmentUrl: varchar("attachment_url", { length: 512 }),
+  attachmentUrl: varchar("attachment_url", { length: 512 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
