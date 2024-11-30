@@ -6,12 +6,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
 import { getHospitalPatients } from "@/utils/FetchHospitalPatients";
+import { format } from "date-fns";
 
-export function PatientsTable({ patients }: { 
-  patients: Awaited<ReturnType<typeof getHospitalPatients>> 
+export function PatientsTable({
+  patients,
+}: {
+  patients: Awaited<ReturnType<typeof getHospitalPatients>>;
 }) {
   return (
     <Table>
@@ -19,9 +20,6 @@ export function PatientsTable({ patients }: {
         <TableRow>
           <TableHead>Name</TableHead>
           <TableHead>Contact</TableHead>
-          <TableHead>Registration Date</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Discharge Date</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -40,25 +38,6 @@ export function PatientsTable({ patients }: {
                 <div>{patient.email}</div>
                 <div className="text-muted-foreground">{patient.phone}</div>
               </div>
-            </TableCell>
-            <TableCell>{format(patient.registrationDate, "PP")}</TableCell>
-            <TableCell>
-              <Badge 
-                variant={
-                  patient.status === "discharged" 
-                    ? "secondary" 
-                    : patient.status === "admitted" 
-                    ? "destructive" 
-                    : "default"
-                }
-              >
-                {patient.status}
-              </Badge>
-            </TableCell>
-            <TableCell>
-              {patient.dischargeDate 
-                ? format(patient.dischargeDate, "PP")
-                : "-"}
             </TableCell>
           </TableRow>
         ))}

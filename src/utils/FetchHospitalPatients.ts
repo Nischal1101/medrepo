@@ -14,9 +14,6 @@ export async function getHospitalPatients(hospitalId: number) {
       dob: PatientTable.dob,
       phone: PatientTable.phone,
       email: UserTable.email,
-      registrationDate: hospitalPatients.registrationDate,
-      status: hospitalPatients.status,
-      dischargeDate: hospitalPatients.dischargeDate,
     })
     .from(hospitalPatients)
     .innerJoin(PatientTable, eq(hospitalPatients.patientId, PatientTable.id))
