@@ -16,6 +16,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { patientSignUpSchema } from "@/validators/PatientSignUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,7 +34,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-export default function PatientSignupForm() {
+export default function PatientSignupForm({
+  hospitals,
+}: {
+  hospitals: {
+    id: number;
+    name: string | null;
+  }[];
+}) {
   const [pending, setPending] = useState(false);
   const router = useRouter();
   type Schema = z.infer<typeof patientSignUpSchema>;
@@ -141,6 +155,29 @@ export default function PatientSignupForm() {
                   />
                 </div>
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="id"
+          render={({ field }) => (
+            <FormItem className="mt-2">
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your hospital." />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {hospitals.map((ele, index) => (
+                    <SelectItem value={String(ele.id)} key={index}>
+                      {ele.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

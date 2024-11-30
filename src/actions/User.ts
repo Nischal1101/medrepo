@@ -6,6 +6,7 @@ import db from "@/lib/db/db";
 import {
   DoctorTable,
   HospitalDoctorsTable,
+  hospitalPatients,
   PatientTable,
   ReportDoctorAccess,
   ReportsTable,
@@ -49,15 +50,17 @@ export const credentialsPatientSignUp = async ({
   phone,
   dob,
   name,
+  id,
 }: {
   name: string;
   email: string;
   password: string;
   phone: string;
   dob: Date;
+  id: string;
 }) => {
   try {
-    if (!email || !password || !phone || !dob || !name) {
+    if (!email || !password || !phone || !dob || !name || !id) {
       return { error: "Invalid Credentials" };
     }
     const exists = await db
@@ -71,18 +74,18 @@ export const credentialsPatientSignUp = async ({
       .insert(UserTable)
       .values({ name, email, password, isVerified: true })
       .returning();
-    try {
-      await db
-        .insert(PatientTable)
-        .values({
-          dob: dob.toISOString(),
-          phone,
-          userId: user[0].id,
-          patientName: name,
-        });
-    } catch (error) {
-      return { error };
-    }
+    const patient = await db
+      .insert(PatientTable)
+      .values({
+        dob: dob.toISOString(),
+        phone,
+        userId: user[0].id,
+        patientName: name,
+      })
+      .returning();
+    await db
+      .insert(hospitalPatients)
+      .values({ hospitalId: Number(id), patientId: patient[0].id });
   } catch (error: unknown) {
     return {
       error:
