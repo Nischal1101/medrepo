@@ -125,9 +125,9 @@ export const hospitalPatients = pgTable(
     patientId: integer("patient_id")
       .references(() => PatientTable.id)
       .notNull(),
-    registrationDate: timestamp("registration_date").notNull(),
+    registrationDate: timestamp("registration_date"),
     dischargeDate: timestamp("discharge_date"),
-    status: varchar("status", { length: 20 }).notNull(), // e.g., 'registered', 'admitted', 'discharged'
+    status: varchar("status", { length: 20 }), // e.g., 'registered', 'admitted', 'discharged'
   },
   (table) => ({
     pk: primaryKey({ columns: [table.hospitalId, table.patientId] }),

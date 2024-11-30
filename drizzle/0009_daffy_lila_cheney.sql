@@ -1,0 +1,1 @@
+ALTER TABLE "hospital_patients" ALTER COLUMN "status" DROP NOT NULL;
