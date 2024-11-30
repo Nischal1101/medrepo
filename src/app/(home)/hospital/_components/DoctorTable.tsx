@@ -1,4 +1,6 @@
 "use client";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -7,13 +9,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 
+import { toggleDoctorVerification } from "@/actions/User";
 import { useState } from "react";
 import { toast } from "sonner";
-import { toggleDoctorVerification } from "@/actions/User";
 
 interface Doctor {
   doctorId: number;
@@ -31,11 +31,14 @@ interface DoctorsTableProps {
 
 export function DoctorsTable({ doctors: initialDoctors }: DoctorsTableProps) {
   const [doctors, setDoctors] = useState(initialDoctors);
+  const [loading, setLoading] = useState(false);
 
   const handleVerificationToggle = async (doctor: Doctor) => {
     try {
+      setLoading(true);
       const result = await toggleDoctorVerification(doctor.userId);
 
+      setLoading(false);
       if (result.success) {
         // Update the local state
         setDoctors((currentDoctors) =>
@@ -81,6 +84,7 @@ export function DoctorsTable({ doctors: initialDoctors }: DoctorsTableProps) {
             <TableCell>{format(doctor.joinedAt, "PP")}</TableCell>
             <TableCell>
               <Button
+                disabled={loading}
                 variant="outline"
                 size="sm"
                 onClick={() => handleVerificationToggle(doctor)}
