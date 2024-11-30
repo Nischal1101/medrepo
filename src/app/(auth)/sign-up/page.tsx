@@ -1,10 +1,11 @@
-
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import PatientSignupForm from "./_components/PatientSignupForm";
+import { getHospitalNames } from "@/utils/FetchHospitalNames";
 
 const PatientSignupPage = async () => {
+  const hospitals = await getHospitalNames();
   const session = await auth();
   if (session) {
     redirect("/");
@@ -13,7 +14,7 @@ const PatientSignupPage = async () => {
     <div className="flex h-screen items-center justify-center  px-4 sm:px-6 lg:px-8">
       <div className="w-96 p-8 shadow-2xl ">
         <h1 className="py-8 text-center text-4xl text-primary">MedRepo.</h1>
-        <PatientSignupForm />
+        <PatientSignupForm hospitals={hospitals ?? []} />
         <hr className="my-8" />
         <div className="mt-3 text-center">
           Already have an account?

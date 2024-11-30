@@ -13,7 +13,7 @@ export default async function HospitalPortalPage() {
   // Fetch data in parallel
   const session = await auth();
   const userId = Number(session?.user.id);
-  console.log("userId", userId);
+
   const hospitalId = await getHospitalId(userId);
   console.log("hospitalId", hospitalId);
   if (!hospitalId) {
@@ -25,8 +25,6 @@ export default async function HospitalPortalPage() {
     getHospitalPatients(hospitalId),
   ]);
 
-  console.log("doctors", doctors);
-  console.log("patients", patients);
   return (
     <MaxWidthWrapper className="mt-12">
       <Tabs defaultValue="doctors" className="space-y-6">
