@@ -18,8 +18,6 @@ export const fetchUserReport = async (userid: number) => {
       id: ReportsTable.id,
       title: ReportsTable.title,
       description: ReportsTable.description,
-      findings: ReportsTable.findings,
-      recommendations: ReportsTable.recommendations,
       reportType: ReportsTable.reportType,
       attachmentUrl: ReportsTable.attachmentUrl,
       createdAt: ReportsTable.createdAt,
