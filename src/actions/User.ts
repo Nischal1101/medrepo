@@ -254,3 +254,35 @@ export async function updateDoctorAccess(
     return { error: "Failed to update access" };
   }
 }
+
+export async function toggleDoctorVerification(userId: number) {
+  try {
+    // First get current verification status
+    const user = await db
+      .select({
+        isVerified: UserTable.isVerified,
+      })
+      .from(UserTable)
+      .where(eq(UserTable.id, userId))
+      .limit(1);
+
+    if (!user.length) {
+      throw new Error("User not found");
+    }
+
+    // Toggle the verification status
+    const currentStatus = user[0].isVerified;
+    await db
+      .update(UserTable)
+      .set({
+        isVerified: !currentStatus,
+        updatedAt: new Date(),
+      })
+      .where(eq(UserTable.id, userId));
+
+    return { success: true, newStatus: !currentStatus };
+  } catch (error) {
+    console.error("Error toggling verification:", error);
+    return { success: false, error: "Failed to update verification status" };
+  }
+}
