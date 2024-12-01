@@ -11,7 +11,6 @@ const ReportsPage = async () => {
   const session = await auth();
   const userid = Number(session?.user.id);
   const patientName = session?.user.name || "patient";
-  console.log("The userId from patient page is", userid);
   if (!session?.user.id) {
     redirect("/sign-up");
   }

@@ -40,7 +40,6 @@ export const fetchUserReport = async (userid: number) => {
     .leftJoin(doctorUser, eq(doctorUser.id, DoctorTable.userId))
     .where(eq(ReportsTable.patientId, Number(userid)))
     .orderBy(ReportsTable.createdAt);
-  console.log("data is fetching ");
   return data;
 };
 export type FetchReportsReturnType = Awaited<
