@@ -32,7 +32,9 @@ const Navbar = () => {
         <MaxWidthWrapper>
           <div className="border-b border-gray-200">
             <div className="flex h-16 items-center justify-between">
-              <h1 className="text-3xl font-bold text-primary">MedRepo.</h1>
+              <Link href={"/"} className="text-3xl font-bold text-primary">
+                MedRepo.
+              </Link>
               <div className=" hidden items-center gap-4 md:flex ">
                 {navList
                   .filter((item) => {

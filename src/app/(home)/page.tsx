@@ -10,7 +10,6 @@ const Home = async () => {
   const session = await auth();
 
   if (session && session.user.role === "hospital") {
-   
     redirect("/hospital");
   } else if (session && session.user.role === "doctor") {
     redirect("reports/doctor");
