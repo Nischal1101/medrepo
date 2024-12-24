@@ -29,11 +29,6 @@ export const navList = [
   },
 
   {
-    name: "Upload",
-    link: "/upload-report",
-    role: ["hospital"],
-  },
-  {
     name: "Reports",
     link: "/reports",
     role: ["patient", "doctor", "unauthorized"],
