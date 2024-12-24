@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { UploadReportForm } from "../../_components/UploadReportForm";
 import { getPatientById } from "@/utils/FetchPatientById";
+import { getHospitalDoctors } from "@/utils/FetchHospitalDoctors";
+import { getHospitalId } from "@/utils/FetchHospitalId";
 
 export default async function UploadReportPage({
   params,
@@ -14,10 +16,17 @@ export default async function UploadReportPage({
   if (!session || session.user.role !== "hospital") {
     redirect("/");
   }
+  const userId = Number(session?.user.id);
 
-  console.log("patientId from params is", (await params).patientid);
+  const hospitalId = await getHospitalId(userId);
+  if (!hospitalId) {
+    throw new Error("no Id ");
+  }
   const patientId = parseInt((await params).patientid);
-  const patient = await getPatientById(patientId);
+  const [patient, doctors] = await Promise.all([
+    getPatientById(patientId),
+    getHospitalDoctors(hospitalId),
+  ]);
 
   if (!patient) {
     return <div>no patient</div>;
@@ -34,7 +43,7 @@ export default async function UploadReportPage({
             <div>Email: {patient.email}</div>
             <div>Phone: {patient.phone}</div>
           </div>
-          <UploadReportForm patientId={patient.patientId} />
+          <UploadReportForm patientId={patient.patientId} doctors={doctors} />
         </CardContent>
       </Card>
     </MaxWidthWrapper>
