@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable camelcase */
 "use server";
 import { DoctorSpecialization } from "@/constants";
@@ -12,6 +13,7 @@ import {
   ReportsTable,
   UserTable,
 } from "@/lib/db/Schema";
+import { getHospitalId } from "@/utils/FetchHospitalId";
 import { and, eq } from "drizzle-orm";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
@@ -33,11 +35,11 @@ export const credentialsSignIn = async ({
       switch (error.type) {
         case "CredentialsSignin":
           return {
-            error: error.cause ,
+            error: error.cause,
           };
         default:
           return {
-            error: error.cause?.err ,
+            error: error.cause?.err,
           };
       }
     }
@@ -292,5 +294,71 @@ export async function toggleDoctorVerification(userId: number) {
   } catch (error) {
     console.error("Error toggling verification:", error);
     return { success: false, error: "Failed to update verification status" };
+  }
+}
+export async function uploadReport(formData: FormData) {
+  try {
+    const session = await auth();
+    if (!session || session.user.role !== "hospital") {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const userId = Number(session.user.id);
+    const hospitalId = await getHospitalId(userId);
+
+    if (!hospitalId) {
+      return { success: false, error: "Hospital not found" };
+    }
+
+    // Get form data
+    const patientId = formData.get("patientId");
+    const reportType = formData.get("reportType");
+    const title = formData.get("title");
+    const description = formData.get("description");
+    const file = formData.get("file") as File;
+
+    // Validate inputs
+    if (!patientId || !reportType || !title || !description || !file) {
+      return { success: false, error: "Missing required fields" };
+    }
+
+    // Mock PDF URL (in production, you'd upload to Cloudinary)
+    const mockPdfUrl =
+      "https://res.cloudinary.com/demo/image/upload/sample.pdf";
+
+    // Fixed query using proper table references
+    const hospitalDoctor = await db
+      .select({
+        doctorId: DoctorTable.id,
+      })
+      .from(DoctorTable)
+      .innerJoin(
+        HospitalDoctorsTable,
+        eq(HospitalDoctorsTable.doctorId, DoctorTable.id)
+      )
+      .where(eq(HospitalDoctorsTable.hospitalId, hospitalId))
+      .limit(1);
+
+    if (!hospitalDoctor || !hospitalDoctor[0]) {
+      return { success: false, error: "No doctors found for this hospital" };
+    }
+
+    // Create report record
+    const res = await db.insert(ReportsTable).values({
+      patientId: parseInt(patientId as string),
+      createdByDoctorId: hospitalDoctor[0].doctorId,
+      hospitalId,
+      reportType: reportType as any,
+      title: title as string,
+      description: description as string,
+      attachmentUrl: mockPdfUrl,
+    });
+    console.log(res);
+
+    revalidatePath("/hospital");
+    return { success: true };
+  } catch (error) {
+    console.error("Error uploading report:", error);
+    return { success: false, error: "Failed to upload report" };
   }
 }
