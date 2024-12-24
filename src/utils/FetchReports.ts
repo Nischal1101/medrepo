@@ -9,6 +9,11 @@ import {
 import { aliasedTable, eq } from "drizzle-orm";
 
 export const fetchUserReport = async (userid: number) => {
+  // get patientId from userId
+  const patient = await db
+    .select()
+    .from(PatientTable)
+    .where(eq(PatientTable.userId, userid));
   const patientUser = aliasedTable(UserTable, "patientUser");
   const hospitalUser = aliasedTable(UserTable, "hospitalUser");
   const doctorUser = aliasedTable(UserTable, "doctorUser");
@@ -38,7 +43,7 @@ export const fetchUserReport = async (userid: number) => {
     // Join to get doctor name
     .leftJoin(DoctorTable, eq(DoctorTable.id, ReportsTable.createdByDoctorId))
     .leftJoin(doctorUser, eq(doctorUser.id, DoctorTable.userId))
-    .where(eq(ReportsTable.patientId, Number(userid)))
+    .where(eq(ReportsTable.patientId, patient[0].id))
     .orderBy(ReportsTable.createdAt);
   return data;
 };
