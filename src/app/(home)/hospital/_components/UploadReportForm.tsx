@@ -28,10 +28,20 @@ const reportTypes = [
 
 interface Props {
   patientId: number;
+  doctors: {
+    userId: number;
+    doctorId: number;
+    doctorName: string;
+    specialization: string;
+    email: string;
+    isVerified: boolean | null;
+    joinedAt: Date;
+  }[];
 }
 
-export function UploadReportForm({ patientId }: Props) {
+export function UploadReportForm({ patientId, doctors }: Props) {
   const router = useRouter();
+  // const doctos=await getHospitalDoctors(hospitalId);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(formData: FormData) {
@@ -69,6 +79,21 @@ export function UploadReportForm({ patientId }: Props) {
                 {type
                   .replace("_", " ")
                   .replace(/\b\w/g, (l) => l.toUpperCase())}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="createdByDoctor">Doctor Name</Label>
+        <Select name="createdByDoctor" required>
+          <SelectTrigger>
+            <SelectValue placeholder="Select Doctor" />
+          </SelectTrigger>
+          <SelectContent>
+            {doctors.map((doc) => (
+              <SelectItem key={doc.doctorId} value={String(doc.doctorId)}>
+                {doc.doctorName}
               </SelectItem>
             ))}
           </SelectContent>
