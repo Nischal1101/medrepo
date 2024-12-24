@@ -313,12 +313,20 @@ export async function uploadReport(formData: FormData) {
     // Get form data
     const patientId = formData.get("patientId");
     const reportType = formData.get("reportType");
+    const createdByDoctor = formData.get("createdByDoctor");
     const title = formData.get("title");
     const description = formData.get("description");
     const file = formData.get("file") as File;
 
     // Validate inputs
-    if (!patientId || !reportType || !title || !description || !file) {
+    if (
+      !patientId ||
+      !reportType ||
+      !title ||
+      !description ||
+      !file ||
+      !createdByDoctor
+    ) {
       return { success: false, error: "Missing required fields" };
     }
 
@@ -344,16 +352,23 @@ export async function uploadReport(formData: FormData) {
     }
 
     // Create report record
-    const res = await db.insert(ReportsTable).values({
-      patientId: parseInt(patientId as string),
-      createdByDoctorId: hospitalDoctor[0].doctorId,
-      hospitalId,
-      reportType: reportType as any,
-      title: title as string,
-      description: description as string,
-      attachmentUrl: mockPdfUrl,
+    const report = await db
+      .insert(ReportsTable)
+      .values({
+        patientId: parseInt(patientId as string),
+        createdByDoctorId: parseInt(createdByDoctor as string),
+        hospitalId,
+        reportType: reportType as any,
+        title: title as string,
+        description: description as string,
+        attachmentUrl: mockPdfUrl,
+      })
+      .returning();
+    await db.insert(ReportDoctorAccess).values({
+      reportId: report[0].id,
+      doctorId: parseInt(createdByDoctor as string),
+      grantedByDoctorId: parseInt(createdByDoctor as string),
     });
-    console.log(res);
 
     revalidatePath("/hospital");
     return { success: true };
