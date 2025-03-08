@@ -14,7 +14,7 @@ export default async function UploadReportPage({
 }) {
   const session = await auth();
   if (!session || session.user.role !== "hospital") {
-    redirect("/");
+    redirect("/");   
   }
   const userId = Number(session?.user.id);
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable camelcase */
 "use server";
+import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import { DoctorSpecialization } from "@/constants";
 import { auth, signIn } from "@/lib/auth";
 import db from "@/lib/db/db";
@@ -296,6 +297,96 @@ export async function toggleDoctorVerification(userId: number) {
     return { success: false, error: "Failed to update verification status" };
   }
 }
+// export async function uploadReport(formData: FormData) {
+//   try {
+//     const session = await auth();
+//     if (!session || session.user.role !== "hospital") {
+//       return { success: false, error: "Unauthorized" };
+//     }
+
+//     const userId = Number(session.user.id);
+//     const hospitalId = await getHospitalId(userId);
+
+//     if (!hospitalId) {
+//       return { success: false, error: "Hospital not found" };
+//     }
+
+//     // Get form data
+//     const patientId = formData.get("patientId");
+//     const reportType = formData.get("reportType");
+//     const createdByDoctor = formData.get("createdByDoctor");
+//     const title = formData.get("title");
+//     const description = formData.get("description");
+//     const file = formData.get("file") as File;
+
+//     // Validate inputs
+//     if (
+//       !patientId ||
+//       !reportType ||
+//       !title ||
+//       !description ||
+//       !file ||
+//       !createdByDoctor
+//     ) {
+//       return { success: false, error: "Missing required fields" };
+//     }
+
+//     // Mock PDF URL (in production, you'd upload to Cloudinary)
+
+//     const mockPdfUrl =
+//       "https://res.cloudinary.com/demo/image/upload/sample.pdf";
+
+//     // Fixed query using proper table references
+//     const hospitalDoctor = await db
+//       .select({
+//         doctorId: DoctorTable.id,
+//       })
+//       .from(DoctorTable)
+//       .innerJoin(
+//         HospitalDoctorsTable,
+//         eq(HospitalDoctorsTable.doctorId, DoctorTable.id)
+//       )
+//       .where(eq(HospitalDoctorsTable.hospitalId, hospitalId))
+//       .limit(1);
+
+//     if (!hospitalDoctor || !hospitalDoctor[0]) {
+//       return { success: false, error: "No doctors found for this hospital" };
+//     }
+
+//     // Create report record
+//     const report = await db
+//       .insert(ReportsTable)
+//       .values({
+//         patientId: parseInt(patientId as string),
+//         createdByDoctorId: parseInt(createdByDoctor as string),
+//         hospitalId,
+//         reportType: reportType as any,
+//         title: title as string,
+//         description: description as string,
+//         attachmentUrl: mockPdfUrl,
+//       })
+//       .returning();
+//     await db.insert(ReportDoctorAccess).values({
+//       reportId: report[0].id,
+//       doctorId: parseInt(createdByDoctor as string),
+//       grantedByDoctorId: parseInt(createdByDoctor as string),
+//     });
+
+//     revalidatePath("/hospital");
+//     return { success: true };
+//   } catch (error) {
+//     console.error("Error uploading report:", error);
+//     return { success: false, error: "Failed to upload report" };
+//   }
+// }
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true, // Use HTTPS
+});
+
 export async function uploadReport(formData: FormData) {
   try {
     const session = await auth();
@@ -330,9 +421,36 @@ export async function uploadReport(formData: FormData) {
       return { success: false, error: "Missing required fields" };
     }
 
-    // Mock PDF URL (in production, you'd upload to Cloudinary)
-    const mockPdfUrl =
-      "https://res.cloudinary.com/demo/image/upload/sample.pdf";
+    // Convert file to a buffer
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Upload file to Cloudinary
+    const uploadResult: UploadApiResponse = await new Promise(
+      (resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream(
+            {
+              resource_type: "auto", // Automatically detect file type
+              folder: "reports", // Optional: Organize files in a folder
+            },
+            (error, result) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(result as UploadApiResponse); // Properly type the result
+              }
+            }
+          )
+          .end(buffer);
+      }
+    );
+
+    if (!uploadResult || !uploadResult.secure_url) {
+      return { success: false, error: "Failed to upload file to Cloudinary" };
+    }
+
+    const fileUrl = uploadResult.secure_url;
 
     // Fixed query using proper table references
     const hospitalDoctor = await db
@@ -361,9 +479,10 @@ export async function uploadReport(formData: FormData) {
         reportType: reportType as any,
         title: title as string,
         description: description as string,
-        attachmentUrl: mockPdfUrl,
+        attachmentUrl: fileUrl, // Use the Cloudinary URL
       })
       .returning();
+
     await db.insert(ReportDoctorAccess).values({
       reportId: report[0].id,
       doctorId: parseInt(createdByDoctor as string),
